@@ -1,6 +1,6 @@
 import React from "react";
 import ConfluenceImage from "@/components/confluence-image";
-import { useToc, TableOfContents } from "@/lib/toc-context";
+import { TableOfContents } from "@/lib/toc-context";
 
 export interface ADFNode {
   type: string;
@@ -48,6 +48,23 @@ export function renderADF(
           </p>
         );
       }
+
+      // Check if any child would render as a block element
+      const hasBlockElements = node.content.some((child) => {
+        return ['panel', 'codeBlock', 'blockquote', 'table', 'mediaGroup', 'mediaSingle', 'extension'].includes(child.type);
+      });
+
+      // If paragraph contains block elements, render as div instead of p
+      if (hasBlockElements) {
+        return (
+          <div key={key} className="mb-4">
+            {node.content?.map((child, index) =>
+              renderADF(child, index, options)
+            )}
+          </div>
+        );
+      }
+
       return (
         <p key={key} className="mb-4">
           {node.content?.map((child, index) =>
@@ -245,7 +262,25 @@ export function renderADF(
             </svg>
           ),
         },
-        success: { classes: "bg-green-50 border-green-200 text-green-800" },
+        success: { 
+          classes: "bg-green-50 border-green-200 text-green-800",
+          icon: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          ),
+        },
         warning: {
           classes: "bg-yellow-50 border-yellow-200 text-yellow-800",
           icon: (
@@ -328,9 +363,11 @@ export function renderADF(
       return (
         <div key={key} className="overflow-x-auto my-4">
           <table className="min-w-full border-collapse border border-gray-300">
-            {node.content?.map((child, index) =>
-              renderADF(child, index, options)
-            )}
+            <tbody>
+              {node.content?.map((child, index) =>
+                renderADF(child, index, options)
+              )}
+            </tbody>
           </table>
         </div>
       );
@@ -389,8 +426,6 @@ export function renderADF(
       const mediaType = node.attrs?.type || "file";
       const collection = node.attrs?.collection;
       const alt = node.attrs?.alt || "Image Confluence";
-      const mediaWidth = node.attrs?.width;
-      const mediaHeight = node.attrs?.height;
 
       if (mediaType === "file" && mediaId && options?.pageId) {
         // Utiliser le composant hybride avec le pageId
@@ -495,6 +530,77 @@ export function renderADF(
     case "table-of-contents":
     case "toc":
       return <TableOfContents key={key} />;
+
+    case "status":
+      const statusText = node.attrs?.text || "Status";
+      const statusColor = node.attrs?.color || "neutral";
+      
+      const statusColors = {
+        neutral: "bg-gray-100 text-gray-800 border-gray-300",
+        blue: "bg-blue-100 text-blue-800 border-blue-300",
+        red: "bg-red-100 text-red-800 border-red-300",
+        yellow: "bg-yellow-100 text-yellow-800 border-yellow-300",
+        green: "bg-green-100 text-green-800 border-green-300",
+        purple: "bg-purple-100 text-purple-800 border-purple-300",
+      };
+
+      return (
+        <span
+          key={key}
+          className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full border ${
+            statusColors[statusColor as keyof typeof statusColors] || statusColors.neutral
+          }`}
+        >
+          {statusText}
+        </span>
+      );
+
+    case "inlineCard":
+      const url = node.attrs?.url || "#";
+      const title = node.attrs?.title || url;
+      
+      return (
+        <a
+          key={key}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors max-w-md"
+        >
+          <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span className="text-blue-800 truncate">{title}</span>
+        </a>
+      );
+
+    case "date":
+      const timestamp = node.attrs?.timestamp;
+      const dateValue = timestamp ? new Date(timestamp).toLocaleDateString() : "Date";
+      
+      return (
+        <span key={key} className="inline-flex items-center px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
+          📅 {dateValue}
+        </span>
+      );
+
+    case "mention":
+      const mentionText = node.attrs?.text || node.attrs?.displayName || "@mention";
+      
+      return (
+        <span key={key} className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">
+          @ {mentionText}
+        </span>
+      );
+
+    case "emoji":
+      const emojiText = node.attrs?.text || node.attrs?.shortName || "😀";
+      
+      return (
+        <span key={key} className="inline-block">
+          {emojiText}
+        </span>
+      );
 
     // Éléments non supportés - affichage de debug
     default:
