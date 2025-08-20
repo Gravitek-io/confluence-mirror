@@ -492,16 +492,8 @@ export function renderADF(
         extensionKey === "toc"
       ) {
         // TOC is now handled at the page level with pre-processed data
-        return (
-          <div key={key} className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-6">
-            <div className="flex items-center">
-              <svg className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-              <span className="font-medium text-blue-800">Table of Contents</span>
-            </div>
-          </div>
-        );
+        // Hide the native Confluence TOC placeholder
+        return null;
       }
 
       return (
@@ -546,16 +538,8 @@ export function renderADF(
     case "table-of-contents":
     case "toc":
       // TOC is now handled at the page level with pre-processed data
-      return (
-        <div key={key} className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-6">
-          <div className="flex items-center">
-            <svg className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-            <span className="font-medium text-blue-800">Table of Contents</span>
-          </div>
-        </div>
-      );
+      // Hide the native Confluence TOC elements
+      return null;
 
     case "status":
       const statusText = node.attrs?.text || "Status";
