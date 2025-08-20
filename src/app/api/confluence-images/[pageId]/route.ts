@@ -53,24 +53,52 @@ function extractImageMappings(storageHtml: string, pageId: string): Record<strin
     return imageMap;
   }
   
-  // Pattern pour extraire les images du format Storage
-  // Format: <ac:image ac:width="XXX">...<ri:attachment ri:filename="image.png"/>...</ac:image>
-  const imageRegex = /<ac:image[^>]*>[\s\S]*?<ri:attachment ri:filename="([^"]*)"[^>]*\/?>[\s\S]*?<\/ac:image>/gi;
+  // Helper function to determine if a filename is an image or video
+  function isImageFile(filename: string): boolean {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+    return imageExtensions.some(ext => filename.toLowerCase().endsWith(ext));
+  }
+  
+  function isVideoFile(filename: string): boolean {
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.flv'];
+    return videoExtensions.some(ext => filename.toLowerCase().endsWith(ext));
+  }
+  
+  // Pattern for extracting ALL attachments from Storage format
+  // We'll then filter by file type
+  const attachmentRegex = /<ri:attachment ri:filename="([^"]*)"[^>]*\/?>/gi;
   
   let match;
   let imageIndex = 0;
+  let videoIndex = 0;
+  let otherIndex = 0;
+  const processedFiles = new Set<string>();
   
-  while ((match = imageRegex.exec(storageHtml)) !== null) {
+  // Extract all attachments and categorize them by file extension
+  while ((match = attachmentRegex.exec(storageHtml)) !== null) {
     const filename = match[1];
-    const imageUrl = `${baseUrl}/wiki/download/attachments/${pageId}/${encodeURIComponent(filename)}`;
+    if (processedFiles.has(filename)) continue;
+    processedFiles.add(filename);
     
-    // Créer plusieurs clés possibles pour le mapping
-    // Les UUIDs des images ADF peuvent ne pas correspondre directement aux noms de fichiers
-    imageMap[`image-${imageIndex}`] = imageUrl;
-    imageMap[filename] = imageUrl;
+    const fileUrl = `${baseUrl}/wiki/download/attachments/${pageId}/${encodeURIComponent(filename)}`;
     
-    console.log(`Mapped image ${imageIndex}: ${filename} -> ${imageUrl}`);
-    imageIndex++;
+    // Categorize by file type
+    if (isImageFile(filename)) {
+      imageMap[`image-${imageIndex}`] = fileUrl;
+      imageMap[filename] = fileUrl;
+      console.log(`Mapped image ${imageIndex}: ${filename} -> ${fileUrl}`);
+      imageIndex++;
+    } else if (isVideoFile(filename)) {
+      imageMap[`video-${videoIndex}`] = fileUrl;
+      imageMap[filename] = fileUrl;
+      console.log(`Mapped video ${videoIndex}: ${filename} -> ${fileUrl}`);
+      videoIndex++;
+    } else {
+      imageMap[`attachment-${otherIndex}`] = fileUrl;
+      imageMap[filename] = fileUrl;
+      console.log(`Mapped other attachment ${otherIndex}: ${filename} -> ${fileUrl}`);
+      otherIndex++;
+    }
   }
   
   return imageMap;

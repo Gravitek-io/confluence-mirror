@@ -469,6 +469,154 @@ export default function ShowroomPage() {
         ]
       },
       {
+        type: 'heading',
+        attrs: { level: 2 },
+        content: [
+          { type: 'text', text: 'Layout and Columns' }
+        ]
+      },
+      {
+        type: 'paragraph',
+        content: [
+          { type: 'text', text: 'Confluence supports multi-column layouts for organizing content side by side:' }
+        ]
+      },
+      {
+        type: 'layoutSection',
+        content: [
+          {
+            type: 'layoutColumn',
+            attrs: { width: 50 },
+            content: [
+              {
+                type: 'panel',
+                attrs: { panelType: 'info' },
+                content: [
+                  {
+                    type: 'paragraph',
+                    content: [
+                      { type: 'text', text: 'This is the left column (50% width). You can put any content here including text, images, panels, and more.' }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Additional content in the left column.' }
+                ]
+              }
+            ]
+          },
+          {
+            type: 'layoutColumn',
+            attrs: { width: 50 },
+            content: [
+              {
+                type: 'panel',
+                attrs: { panelType: 'success' },
+                content: [
+                  {
+                    type: 'paragraph',
+                    content: [
+                      { type: 'text', text: 'This is the right column (50% width). Layouts are perfect for comparing information or creating structured content.' }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'bulletList',
+                content: [
+                  {
+                    type: 'listItem',
+                    content: [
+                      {
+                        type: 'paragraph',
+                        content: [{ type: 'text', text: 'Lists work great in columns' }]
+                      }
+                    ]
+                  },
+                  {
+                    type: 'listItem',
+                    content: [
+                      {
+                        type: 'paragraph',
+                        content: [{ type: 'text', text: 'Responsive design' }]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        type: 'paragraph',
+        content: [
+          { type: 'text', text: 'Three-column layout example:' }
+        ]
+      },
+      {
+        type: 'layoutSection',
+        content: [
+          {
+            type: 'layoutColumn',
+            attrs: { width: 33 },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Column 1 (33%)', marks: [{ type: 'strong' }] }
+                ]
+              },
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Perfect for feature lists or step-by-step guides.' }
+                ]
+              }
+            ]
+          },
+          {
+            type: 'layoutColumn',
+            attrs: { width: 33 },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Column 2 (33%)', marks: [{ type: 'strong' }] }
+                ]
+              },
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Great for organizing related information side by side.' }
+                ]
+              }
+            ]
+          },
+          {
+            type: 'layoutColumn',
+            attrs: { width: 33 },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Column 3 (33%)', marks: [{ type: 'strong' }] }
+                ]
+              },
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Responsive design ensures it works on all devices.' }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         type: 'paragraph',
         content: [
           { type: 'text', text: 'This page demonstrates all the features currently supported by our Confluence to React application.' }

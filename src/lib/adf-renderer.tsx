@@ -1,5 +1,5 @@
 import React from "react";
-import ConfluenceImage from "@/components/confluence-image";
+import ConfluenceMedia from "@/components/confluence-media";
 import { TableOfContents } from "@/lib/toc-context";
 
 export interface ADFNode {
@@ -21,6 +21,7 @@ export interface ADFDocument {
 
 interface RenderOptions {
   pageId: string;
+  totalColumnWidth?: number;
 }
 
 export function renderADF(
@@ -428,9 +429,9 @@ export function renderADF(
       const alt = node.attrs?.alt || "Confluence Image";
 
       if (mediaType === "file" && mediaId && options?.pageId) {
-        // Use hybrid component with pageId
+        // Use hybrid component with pageId that can handle both images and videos
         return (
-          <ConfluenceImage
+          <ConfluenceMedia
             key={key}
             mediaId={mediaId}
             collection={collection}
@@ -600,6 +601,92 @@ export function renderADF(
         <span key={key} className="inline-block">
           {emojiText}
         </span>
+      );
+
+    case "layoutSection":
+      // Calculate total width of all columns to handle overflow
+      const sectionTotalWidth = node.content?.reduce((sum, child) => {
+        if (child.type === 'layoutColumn') {
+          return sum + (child.attrs?.width || 50);
+        }
+        return sum;
+      }, 0) || 100;
+      
+      const sectionIsOverflowing = sectionTotalWidth > 100;
+      
+      return (
+        <div key={key} className="w-full my-6">
+          <div className={`flex flex-col md:flex-row gap-4 ${sectionIsOverflowing ? 'overflow-x-auto' : ''}`}>
+            {node.content?.map((child, index) =>
+              renderADF(child, index, { ...options, totalColumnWidth: sectionTotalWidth })
+            )}
+          </div>
+        </div>
+      );
+
+    case "layoutColumn":
+      const columnWidth = node.attrs?.width || 50; // Default to 50% if no width specified
+      const totalWidth = options?.totalColumnWidth || 100;
+      const isOverflowing = totalWidth > 100;
+      
+      // If overflowing, normalize the width proportionally
+      const normalizedWidth = isOverflowing ? (columnWidth / totalWidth) * 100 : columnWidth;
+      
+      // Use flex with proper responsive behavior and overflow control
+      const flexClass = "flex-shrink-0"; // Always use shrink-0 for consistent sizing
+      let widthStyle = {}; // For precise width control
+      
+      // Calculate responsive widths based on normalized percentages
+      if (normalizedWidth <= 25) {
+        widthStyle = { 
+          width: `${normalizedWidth}%`, 
+          minWidth: "200px",
+          maxWidth: `${normalizedWidth}%`
+        };
+      } else if (normalizedWidth <= 33) {
+        widthStyle = { 
+          width: `${normalizedWidth}%`, 
+          minWidth: "250px",
+          maxWidth: `${normalizedWidth}%`
+        };
+      } else if (normalizedWidth <= 50) {
+        widthStyle = { 
+          width: `${normalizedWidth}%`, 
+          minWidth: "300px",
+          maxWidth: `${normalizedWidth}%`
+        };
+      } else if (normalizedWidth <= 66) {
+        widthStyle = { 
+          width: `${normalizedWidth}%`, 
+          minWidth: "350px",
+          maxWidth: `${normalizedWidth}%`
+        };
+      } else if (normalizedWidth <= 75) {
+        widthStyle = { 
+          width: `${normalizedWidth}%`, 
+          minWidth: "400px",
+          maxWidth: `${normalizedWidth}%`
+        };
+      } else {
+        widthStyle = { 
+          width: `${normalizedWidth}%`, 
+          minWidth: "450px",
+          maxWidth: `${normalizedWidth}%`
+        };
+      }
+
+      return (
+        <div 
+          key={key} 
+          className={`${flexClass} min-w-0 overflow-hidden`}
+          style={widthStyle}
+        >
+          <div className="pr-4 last:pr-0 overflow-hidden">
+            {node.content?.map((child, index) =>
+              renderADF(child, index, options)
+            )}
+          </div>
+        </div>
       );
 
     // Unsupported elements - debug display
