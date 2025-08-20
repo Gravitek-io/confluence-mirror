@@ -20,6 +20,22 @@ export interface ConfluencePage {
   _links: {
     webui: string;
   };
+  children?: {
+    page?: {
+      results: ConfluenceChildPage[];
+      size: number;
+    };
+  };
+}
+
+export interface ConfluenceChildPage {
+  id: string;
+  title: string;
+  type: string;
+  status: string;
+  _links: {
+    webui: string;
+  };
 }
 
 export class ConfluenceApiError extends Error {
@@ -66,10 +82,24 @@ export class ConfluenceClient {
     return response.json();
   }
 
-  async getPage(pageId: string): Promise<ConfluencePage> {
+  async getPage(pageId: string, includeChildren: boolean = false): Promise<ConfluencePage> {
+    const expandParams = ['body.storage', 'body.atlas_doc_format', 'version', 'space'];
+    
+    if (includeChildren) {
+      expandParams.push('children.page');
+    }
+    
     return this.makeRequest<ConfluencePage>(
-      `content/${pageId}?expand=body.storage,body.atlas_doc_format,version,space`
+      `content/${pageId}?expand=${expandParams.join(',')}`
     );
+  }
+
+  async getChildPages(pageId: string): Promise<ConfluenceChildPage[]> {
+    const response = await this.makeRequest<{
+      results: ConfluenceChildPage[];
+    }>(`content/${pageId}/child/page?expand=version,space`);
+    
+    return response.results;
   }
 
   async getCurrentUser(): Promise<any> {
