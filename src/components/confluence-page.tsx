@@ -1,6 +1,7 @@
 import { confluenceClient } from '@/lib/confluence';
-import { TocProvider } from '@/lib/toc-context';
-import ADFRendererWithToc from '@/components/adf-renderer-with-toc';
+import { processADFWithMedia } from '@/lib/media-processor';
+import { processADFWithTOC } from '@/lib/toc-processor';
+import OptimizedADFRenderer from '@/components/optimized-adf-renderer';
 
 interface ConfluencePageProps {
   pageId: string;
@@ -12,6 +13,7 @@ export default async function ConfluencePage({ pageId }: ConfluencePageProps) {
     
     // Get the ADF content
     const adfContent = page.body.atlas_doc_format?.value;
+    const storageContent = page.body.storage?.value;
     
     if (!adfContent) {
       return (
@@ -35,6 +37,15 @@ export default async function ConfluencePage({ pageId }: ConfluencePageProps) {
         </div>
       );
     }
+
+    // Pre-process ADF with media URLs (server-side)
+    let processedContent = parsedContent;
+    if (storageContent) {
+      processedContent = await processADFWithMedia(parsedContent, storageContent, pageId);
+    }
+
+    // Pre-process ADF with TOC extraction (server-side)
+    const { enrichedDocument, tableOfContents } = processADFWithTOC(processedContent);
 
     return (
       <div className="bg-white rounded-lg shadow-lg border border-gray-200">
@@ -65,9 +76,11 @@ export default async function ConfluencePage({ pageId }: ConfluencePageProps) {
         <div className="p-6">
           <div className="prose prose-lg max-w-full">
             <div className="confluence-hybrid-content">
-              <TocProvider>
-                <ADFRendererWithToc document={parsedContent} pageId={pageId} />
-              </TocProvider>
+              <OptimizedADFRenderer 
+                document={enrichedDocument} 
+                pageId={pageId} 
+                tableOfContents={tableOfContents}
+              />
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React from "react";
-import ConfluenceMedia from "@/components/confluence-media";
-import { TableOfContents } from "@/lib/toc-context";
+import OptimizedMedia from "@/components/optimized-media";
+import OptimizedTOC from "@/components/optimized-toc";
 
 export interface ADFNode {
   type: string;
@@ -20,7 +20,7 @@ export interface ADFDocument {
 }
 
 interface RenderOptions {
-  pageId: string;
+  pageId?: string;
   totalColumnWidth?: number;
 }
 
@@ -93,16 +93,18 @@ export function renderADF(
         6: "text-sm font-bold mb-2",
       };
 
-      // Generate ID for anchor
-      const headingText =
-        node.content
-          ?.map((child) => (child.type === "text" ? child.text : ""))
-          .join("") || "";
-      const headingId = headingText
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .trim();
+      // Use pre-generated ID if available, otherwise generate one
+      const headingId = node.attrs?.generatedId || (() => {
+        const headingText =
+          node.content
+            ?.map((child) => (child.type === "text" ? child.text : ""))
+            .join("") || "";
+        return headingText
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .trim();
+      })();
 
       return React.createElement(
         HeadingTag,
@@ -425,18 +427,21 @@ export function renderADF(
     case "media":
       const mediaId = node.attrs?.id;
       const mediaType = node.attrs?.type || "file";
-      const collection = node.attrs?.collection;
-      const alt = node.attrs?.alt || "Confluence Image";
+      const alt = node.attrs?.alt || "Confluence Media";
+      
+      // Check if we have pre-processed URL and type
+      const processedUrl = node.attrs?.processedUrl;
+      const processedType = node.attrs?.processedType;
 
-      if (mediaType === "file" && mediaId && options?.pageId) {
-        // Use hybrid component with pageId that can handle both images and videos
+      if (mediaType === "file" && processedUrl && processedType && options?.pageId) {
+        // Use optimized component with pre-processed data
         return (
-          <ConfluenceMedia
+          <OptimizedMedia
             key={key}
-            mediaId={mediaId}
-            collection={collection}
-            pageId={options.pageId}
+            url={processedUrl}
+            type={processedType}
             alt={alt}
+            pageId={options.pageId}
           />
         );
       }
@@ -486,7 +491,17 @@ export function renderADF(
         extensionType === "com.atlassian.confluence.macro.core" &&
         extensionKey === "toc"
       ) {
-        return <TableOfContents key={key} />;
+        // TOC is now handled at the page level with pre-processed data
+        return (
+          <div key={key} className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-6">
+            <div className="flex items-center">
+              <svg className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+              <span className="font-medium text-blue-800">Table of Contents</span>
+            </div>
+          </div>
+        );
       }
 
       return (
@@ -530,7 +545,17 @@ export function renderADF(
 
     case "table-of-contents":
     case "toc":
-      return <TableOfContents key={key} />;
+      // TOC is now handled at the page level with pre-processed data
+      return (
+        <div key={key} className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-6">
+          <div className="flex items-center">
+            <svg className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            <span className="font-medium text-blue-800">Table of Contents</span>
+          </div>
+        </div>
+      );
 
     case "status":
       const statusText = node.attrs?.text || "Status";
