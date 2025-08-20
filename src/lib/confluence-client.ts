@@ -76,27 +76,6 @@ export class ConfluenceClient {
     return this.makeRequest<any>('user/current');
   }
 
-  async scrapePageHtml(pageId: string): Promise<string> {
-    // Utiliser l'URL directe de la page Confluence pour récupérer le HTML
-    const pageUrl = `${this.baseUrl}/wiki/pages/viewpage.action?pageId=${pageId}`;
-    
-    const response = await fetch(pageUrl, {
-      headers: {
-        'Authorization': `Basic ${Buffer.from(`${this.email}:${this.apiKey}`).toString('base64')}`,
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      },
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new ConfluenceApiError(`Failed to scrape page HTML: ${response.status} - ${errorText}`, response.status);
-    }
-
-    return response.text();
-  }
-
   /**
    * Extract page ID from Confluence URL
    * Supports formats like:

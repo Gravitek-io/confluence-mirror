@@ -2,10 +2,9 @@
 
 import React, { useEffect } from 'react';
 import { renderADF, ADFNode, ADFDocument } from '@/lib/adf-renderer';
-import { useToc, TableOfContents } from '@/lib/toc-context';
-import DebugHeadings from '@/components/debug-headings';
+import { useToc } from '@/lib/toc-context';
 
-// Fonction pour extraire les titres du contenu ADF (utilise la même logique que le debug)
+// Fonction pour extraire les titres du contenu ADF
 function extractHeadings(node: ADFNode | ADFDocument, addItem: (item: { id: string; title: string; level: number }) => void, existingSlugs: Set<string>) {
   if (!node) return;
 
@@ -27,7 +26,6 @@ function extractHeadings(node: ADFNode | ADFDocument, addItem: (item: { id: stri
   }
 }
 
-// Même fonction que dans le debug
 function extractTextFromContent(content: ADFNode[]): string {
   return content.map(node => {
     if (node.type === 'text' && node.text) {
@@ -61,9 +59,10 @@ function generateSlug(text: string, existingSlugs: Set<string>): string {
 
 interface ADFRendererWithTocProps {
   document: ADFDocument;
+  pageId: string;
 }
 
-export default function ADFRendererWithToc({ document }: ADFRendererWithTocProps) {
+export default function ADFRendererWithToc({ document, pageId }: ADFRendererWithTocProps) {
   const { addItem, clear } = useToc();
   
   // Utiliser une référence pour éviter la re-extraction inutile
@@ -81,16 +80,11 @@ export default function ADFRendererWithToc({ document }: ADFRendererWithTocProps
       hasExtracted.current = true;
       console.log('Headings extraction completed');
     }
-  }); // Pas de tableau de dépendances - s'exécute à chaque rendu mais avec protection
+  });
 
   return (
     <div>
-      {renderADF(document)}
+      {renderADF(document, undefined, { pageId })}
     </div>
   );
-}
-
-// Composant pour remplacer le type toc
-export function TocPlaceholder() {
-  return <TableOfContents />;
 }

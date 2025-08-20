@@ -8,7 +8,7 @@ A Next.js application that displays and converts Confluence page content to Reac
 - **Automatic table of contents**: Auto-generated TOC from page headings
 - **Optimized images**: Proper Confluence image display with width constraints
 - **Full support**: Text, headings, lists, tables, images, captions, macros
-- **3 rendering modes**: Original ADF, hybrid ADF, and Storage HTML for comparison
+- **Server-side rendering**: Fast page loads with Next.js App Router
 
 ## 🚀 Installation
 
@@ -73,16 +73,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 1. **Home page**: Enter a Confluence page URL or page ID
 2. **Validation**: Click "Display page" to load the content
-3. **Rendering modes**: Use the buttons in the top right to switch between:
-   - **ADF Original**: Classic ADF rendering (images may not work)
-   - **🎯 ADF + Images**: **Recommended mode** - Best rendering quality
-   - **HTML Storage**: Basic rendering but guaranteed images
+3. **Content display**: The page will be rendered using the hybrid ADF approach
 
-## 🎯 Recommended mode
+## 🎯 Hybrid Rendering
 
-The **"🎯 ADF + Images"** mode offers the best experience:
-- ✅ Perfect formatting (ADF)
-- ✅ Functional images (Storage)
+The application uses a hybrid approach that offers the best experience:
+- ✅ Perfect formatting with ADF (Atlas Document Format)
+- ✅ Functional images from Storage format
 - ✅ Interactive table of contents
 - ✅ Full Confluence elements support
 
@@ -90,16 +87,14 @@ The **"🎯 ADF + Images"** mode offers the best experience:
 
 ### Main Components
 
-- **`ConfluencePageWithToggle`**: Main interface with mode selector
-- **`ADFRendererWithTocHybrid`**: Hybrid ADF rendering with TOC
-- **`ConfluenceImageHybrid`**: Optimized image component with Storage mapping
+- **`ConfluencePage`**: Main page component with hybrid rendering
+- **`ADFRendererWithToc`**: Hybrid ADF rendering with TOC support
+- **`ConfluenceImage`**: Optimized image component with Storage mapping
 - **`TocProvider`**: React context for TOC management
 
 ### APIs
 
-- **`/api/confluence-images/[pageId]`**: Image mappings extraction from Storage
-- **`/api/confluence-html/[pageId]`**: Storage to clean HTML conversion
-- **`/api/media/[mediaId]`**: Confluence image proxy (fallback)
+- **`/api/confluence-images/[pageId]`**: Image mappings extraction from Storage format
 
 ### Hybrid Approach
 

@@ -2,22 +2,6 @@ import React from 'react';
 import ConfluenceImage from '@/components/confluence-image';
 import { useToc, TableOfContents } from '@/lib/toc-context';
 
-// Fonction pour construire l'URL des médias Confluence (version simple pour ADF original)
-function buildConfluenceMediaUrl(mediaId: string, collection?: string): string {
-  // Utiliser notre proxy API standard pour gérer l'authentification
-  if (!mediaId || mediaId.trim() === '') {
-    return ''; // Retourner une chaîne vide si pas d'ID
-  }
-  
-  let url = `/api/media/${mediaId}`;
-  
-  if (collection) {
-    url += `?collection=${encodeURIComponent(collection)}`;
-  }
-  
-  return url;
-}
-
 export interface ADFNode {
   type: string;
   attrs?: Record<string, any>;
@@ -35,15 +19,18 @@ export interface ADFDocument {
   content: ADFNode[];
 }
 
+interface RenderOptions {
+  pageId: string;
+}
 
-export function renderADF(node: ADFNode | ADFDocument, key?: string | number): React.ReactNode {
+export function renderADF(node: ADFNode | ADFDocument, key?: string | number, options?: RenderOptions): React.ReactNode {
   if (!node) return null;
 
   switch (node.type) {
     case 'doc':
       return (
         <div key={key} className="adf-document">
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </div>
       );
 
@@ -53,7 +40,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
       }
       return (
         <p key={key} className="mb-4">
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </p>
       );
 
@@ -87,7 +74,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
           id: headingId,
           className: headingClasses[validLevel as keyof typeof headingClasses] || headingClasses[1] 
         },
-        node.content?.map((child, index) => renderADF(child, index))
+        node.content?.map((child, index) => renderADF(child, index, options))
       );
 
     case 'text':
@@ -134,14 +121,14 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
     case 'bulletList':
       return (
         <ul key={key} className="list-disc list-inside mb-4 ml-4">
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </ul>
       );
 
     case 'orderedList':
       return (
         <ol key={key} className="list-decimal list-inside mb-4 ml-4">
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </ol>
       );
 
@@ -153,11 +140,11 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
             if (child.type === 'paragraph') {
               return (
                 <span key={index}>
-                  {child.content?.map((textChild, textIndex) => renderADF(textChild, textIndex))}
+                  {child.content?.map((textChild, textIndex) => renderADF(textChild, textIndex, options))}
                 </span>
               );
             }
-            return renderADF(child, index);
+            return renderADF(child, index, options);
           })}
         </li>
       );
@@ -165,7 +152,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
     case 'blockquote':
       return (
         <blockquote key={key} className="border-l-4 border-gray-300 pl-4 italic my-4 text-gray-700">
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </blockquote>
       );
 
@@ -188,7 +175,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
     case 'caption':
       return (
         <div key={key} className="text-center italic text-gray-600 text-sm mt-2 mb-4">
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </div>
       );
 
@@ -204,7 +191,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
       
       return (
         <div key={key} className={`p-4 border rounded-lg my-4 ${panelClasses[panelType as keyof typeof panelClasses] || panelClasses.info}`}>
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </div>
       );
 
@@ -212,7 +199,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
       return (
         <div key={key} className="overflow-x-auto my-4">
           <table className="min-w-full border-collapse border border-gray-300">
-            {node.content?.map((child, index) => renderADF(child, index))}
+            {node.content?.map((child, index) => renderADF(child, index, options))}
           </table>
         </div>
       );
@@ -220,7 +207,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
     case 'tableRow':
       return (
         <tr key={key}>
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </tr>
       );
 
@@ -234,7 +221,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
       return React.createElement(
         Tag,
         { key, className: cellClasses },
-        node.content?.map((child, index) => renderADF(child, index))
+        node.content?.map((child, index) => renderADF(child, index, options))
       );
 
     case 'mediaSingle':
@@ -254,7 +241,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
           key={key} 
           className={`my-6 ${layoutClasses[layout as keyof typeof layoutClasses] || layoutClasses.center}`}
         >
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </div>
       );
 
@@ -266,33 +253,15 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
       const mediaWidth = node.attrs?.width;
       const mediaHeight = node.attrs?.height;
       
-      if (mediaType === 'file' && mediaId) {
-        // Construire l'URL de l'image Confluence
-        const imageUrl = buildConfluenceMediaUrl(mediaId, collection);
-        
-        // Ne pas rendre l'image si l'URL est vide
-        if (!imageUrl) {
-          return (
-            <div key={key} className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-              <div className="text-gray-500 mb-2">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <p className="text-sm text-gray-600 font-medium">Image Confluence</p>
-              <p className="text-xs text-gray-500">ID: {mediaId || 'Non défini'}</p>
-            </div>
-          );
-        }
-        
+      if (mediaType === 'file' && mediaId && options?.pageId) {
+        // Utiliser le composant hybride avec le pageId
         return (
           <ConfluenceImage
             key={key}
-            src={imageUrl}
-            alt={alt}
-            width={mediaWidth}
-            height={mediaHeight}
             mediaId={mediaId}
+            collection={collection}
+            pageId={options.pageId}
+            alt={alt}
           />
         );
       }
@@ -314,7 +283,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
     case 'mediaGroup':
       return (
         <div key={key} className="flex flex-wrap gap-4 my-6">
-          {node.content?.map((child, index) => renderADF(child, index))}
+          {node.content?.map((child, index) => renderADF(child, index, options))}
         </div>
       );
 
@@ -343,7 +312,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
           </p>
           {node.content && node.content.length > 0 && (
             <div className="mt-3 pt-3 border-t border-blue-200">
-              {node.content.map((child, index) => renderADF(child, index))}
+              {node.content.map((child, index) => renderADF(child, index, options))}
             </div>
           )}
         </div>
@@ -361,7 +330,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
             <strong>Type non supporté :</strong> {node.type}
             {node.content && (
               <div className="mt-1">
-                {node.content.map((child, index) => renderADF(child, index))}
+                {node.content.map((child, index) => renderADF(child, index, options))}
               </div>
             )}
           </div>
@@ -372,7 +341,7 @@ export function renderADF(node: ADFNode | ADFDocument, key?: string | number): R
       if (node.content) {
         return (
           <div key={key}>
-            {node.content.map((child, index) => renderADF(child, index))}
+            {node.content.map((child, index) => renderADF(child, index, options))}
           </div>
         );
       }
