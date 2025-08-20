@@ -1,36 +1,143 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Confluence to React
 
-## Getting Started
+A Next.js application that displays and converts Confluence page content to React with modern styling.
 
-First, run the development server:
+## ✨ Features
+
+- **Hybrid ADF rendering**: Combines beautiful ADF formatting with functional Storage images
+- **Automatic table of contents**: Auto-generated TOC from page headings
+- **Optimized images**: Proper Confluence image display with width constraints
+- **Full support**: Text, headings, lists, tables, images, captions, macros
+- **3 rendering modes**: Original ADF, hybrid ADF, and Storage HTML for comparison
+
+## 🚀 Installation
+
+1. **Clone the project**
+```bash
+git clone <your-repo>
+cd confluence-to-react
+```
+
+2. **Install dependencies**
+```bash
+npm install
+# or
+yarn install
+```
+
+3. **Configuration**
+```bash
+# Copy the example environment file
+cp .env.example .env.local
+```
+
+## 🔧 Configuration
+
+### 1. Create a Confluence API token
+
+1. Log in to your Atlassian account
+2. Go to **Account Settings** → **Security** → **API tokens**
+3. Click **Create API token**
+4. Give your token a name (e.g., "Confluence to React")
+5. Copy the generated token
+
+### 2. Configure environment variables
+
+Edit the `.env.local` file with your information:
+
+```env
+# Base URL of your Confluence instance (without trailing slash)
+CONFLUENCE_BASE_URL=https://your-domain.atlassian.net
+
+# Email address of your Confluence account
+CONFLUENCE_EMAIL=your.email@example.com
+
+# Confluence API key (generate from Account Settings > Security > API tokens)
+CONFLUENCE_API_KEY=your_confluence_api_key
+
+# Public Confluence URL for links (same value as CONFLUENCE_BASE_URL)
+NEXT_PUBLIC_CONFLUENCE_BASE_URL=https://your-domain.atlassian.net
+```
+
+## 🏃‍♂️ Getting Started
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Home page**: Enter a Confluence page URL or page ID
+2. **Validation**: Click "Display page" to load the content
+3. **Rendering modes**: Use the buttons in the top right to switch between:
+   - **ADF Original**: Classic ADF rendering (images may not work)
+   - **🎯 ADF + Images**: **Recommended mode** - Best rendering quality
+   - **HTML Storage**: Basic rendering but guaranteed images
 
-## Learn More
+## 🎯 Recommended mode
 
-To learn more about Next.js, take a look at the following resources:
+The **"🎯 ADF + Images"** mode offers the best experience:
+- ✅ Perfect formatting (ADF)
+- ✅ Functional images (Storage)
+- ✅ Interactive table of contents
+- ✅ Full Confluence elements support
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Technical Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Main Components
 
-## Deploy on Vercel
+- **`ConfluencePageWithToggle`**: Main interface with mode selector
+- **`ADFRendererWithTocHybrid`**: Hybrid ADF rendering with TOC
+- **`ConfluenceImageHybrid`**: Optimized image component with Storage mapping
+- **`TocProvider`**: React context for TOC management
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### APIs
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **`/api/confluence-images/[pageId]`**: Image mappings extraction from Storage
+- **`/api/confluence-html/[pageId]`**: Storage to clean HTML conversion
+- **`/api/media/[mediaId]`**: Confluence image proxy (fallback)
+
+### Hybrid Approach
+
+The main innovation is the hybrid approach that:
+1. Uses the **ADF API** for structure and formatting (headings, text, lists...)
+2. Extracts **image URLs** from the Confluence Storage format
+3. **Maps** ADF image IDs to real Storage URLs
+4. Generates **optimal rendering** combining advantages of both formats
+
+## 🔍 Troubleshooting
+
+### Images not displaying
+- Check your Confluence credentials in `.env.local`
+- Ensure your API token has proper permissions
+- Try "HTML Storage" mode to verify connectivity
+
+### Authentication errors
+- Verify that `CONFLUENCE_EMAIL` matches your Atlassian account
+- Regenerate a new API token if necessary
+- Test the `CONFLUENCE_BASE_URL` in your browser
+
+### Page not loading
+- Check that the Confluence page URL is accessible
+- Try with the page ID directly
+- Check the development server logs
+
+## 📚 Technologies Used
+
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Static typing
+- **Tailwind CSS**: Utility-first CSS framework
+- **Confluence API**: REST API v1 and v2
+- **Atlas Document Format (ADF)**: Confluence native format
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
+
+## 📄 License
+
+This project is licensed under the MIT License.

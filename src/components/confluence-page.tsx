@@ -1,5 +1,5 @@
 import { confluenceClient } from '@/lib/confluence';
-import { ConfluenceClient } from '@/lib/confluence-client';
+import ConfluencePageWithToggle from '@/components/confluence-page-with-toggle';
 
 interface ConfluencePageProps {
   pageId: string;
@@ -21,60 +21,8 @@ export default async function ConfluencePage({ pageId }: ConfluencePageProps) {
       );
     }
 
-    return (
-      <div className="bg-white rounded-lg shadow-lg border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">{page.title}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <span>ID: {page.id}</span>
-                <span>Version: {page.version.number}</span>
-                <span>Espace: {page.space.name} ({page.space.key})</span>
-              </div>
-            </div>
-            <a 
-              href={page._links.webui}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors"
-            >
-              Voir dans Confluence
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          </div>
-        </div>
-        
-        <div className="p-6">
-          <div className="prose prose-lg max-w-none">
-            {page.body.atlas_doc_format ? (
-              // For Atlas Document Format (newer format)
-              <div className="confluence-atlas-content">
-                <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-md text-sm overflow-x-auto">
-                  {content}
-                </pre>
-                <p className="text-xs text-gray-500 mt-2">
-                  Format: Atlas Document Format (JSON)
-                </p>
-              </div>
-            ) : (
-              // For Storage format (legacy HTML-like format)
-              <div className="confluence-storage-content">
-                <div 
-                  className="confluence-html-content"
-                  dangerouslySetInnerHTML={{ __html: content }} 
-                />
-                <p className="text-xs text-gray-500 mt-4">
-                  Format: Storage ({page.body.storage?.representation})
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
+    return <ConfluencePageWithToggle pageId={pageId} initialPage={page} />;
+    
   } catch (error) {
     console.error('Error fetching Confluence page:', error);
     
