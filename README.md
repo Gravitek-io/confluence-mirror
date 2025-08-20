@@ -75,6 +75,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 2. **Validation**: Click "Display page" to load the content
 3. **Content display**: The page will be rendered using the hybrid ADF approach
 
+### 🎨 Showroom
+
+Visit `/showroom` to see a comprehensive demonstration of all supported Confluence elements:
+- Text formatting (bold, italic, code, links)
+- Lists (bulleted and numbered)
+- Status indicators and mentions
+- Panels (info, warning, error, success)
+- Tables with styled headers
+- Code blocks and quotes
+- And much more!
+
 ## 🎯 Hybrid Rendering
 
 The application uses a hybrid approach that offers the best experience:

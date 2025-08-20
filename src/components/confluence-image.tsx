@@ -26,11 +26,21 @@ export default function ConfluenceImage({
         console.log(
           `Loading image URL for mediaId: ${mediaId}, pageId: ${pageId}`
         );
-        
+
         // Ensure pageId is a string
-        if (!pageId || typeof pageId !== 'string') {
-          console.error('Invalid pageId:', pageId, typeof pageId);
+        if (!pageId || typeof pageId !== "string") {
+          console.error("Invalid pageId:", pageId, typeof pageId);
           setHasError(true);
+          return;
+        }
+
+        // Handle special case for showroom page
+        if (pageId === "showroom") {
+          console.log("Showroom page detected, using Unsplash demo image");
+          setImageUrl(
+            "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+          );
+          setIsLoading(false);
           return;
         }
 
@@ -117,25 +127,50 @@ export default function ConfluenceImage({
             />
           </svg>
         </div>
-        <p className="text-sm text-gray-600 font-medium">Image Confluence</p>
+        <p className="text-sm text-gray-600 font-medium">Confluence Image</p>
         <p className="text-xs text-gray-500">ID: {mediaId}</p>
         {alt && <p className="text-xs text-gray-500">Alt: {alt}</p>}
       </div>
     );
   }
 
+  // Get full size URL for click-to-open functionality
+  const getFullSizeUrl = (url: string) => {
+    if (pageId === "showroom") {
+      // Return high-res version for Unsplash image
+      return url.replace("w=1200&q=80", "w=2400&q=90");
+    }
+    // For Confluence images, return the same URL (already full size)
+    return url;
+  };
+
+  const handleImageClick = () => {
+    if (imageUrl) {
+      window.open(getFullSizeUrl(imageUrl), "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
-    <div className="max-w-full overflow-hidden flex justify-center" style={{ maxWidth: "100%" }}>
-      <Image
-        src={imageUrl || "/placeholder.png"}
-        alt={alt}
-        width={600}
-        height={400}
-        className="rounded-lg shadow-sm"
-        onError={() => setHasError(true)}
-        unoptimized={true}
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
+    <div
+      className="max-w-full overflow-hidden flex justify-center"
+      style={{ maxWidth: "100%" }}
+    >
+      <div
+        className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+        onClick={handleImageClick}
+        title="Click to open full size image in new tab"
+      >
+        <Image
+          src={imageUrl || "/placeholder.png"}
+          alt={alt}
+          className="rounded-lg shadow-sm hover:shadow-lg transition-shadow"
+          onError={() => setHasError(true)}
+          unoptimized={true}
+          width={1000}
+          height={800}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      </div>
     </div>
   );
 }

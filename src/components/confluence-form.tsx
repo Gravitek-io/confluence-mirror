@@ -27,7 +27,7 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
         const extractedId = ConfluenceClient.extractPageIdFromUrl(pageId);
         if (!extractedId) {
           throw new Error(
-            "Impossible d'extraire l'ID de la page à partir de cette URL. Veuillez utiliser un ID numérique ou une URL valide Confluence."
+            "Unable to extract page ID from this URL. Please use a numeric ID or a valid Confluence URL."
           );
         }
         pageId = extractedId;
@@ -35,13 +35,13 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
 
       // Validate that pageId is numeric
       if (!/^\d+$/.test(pageId)) {
-        throw new Error("L'ID de page doit être numérique. Exemple: 123456");
+        throw new Error("Page ID must be numeric. Example: 123456");
       }
 
       // Update URL with pageId parameter
       router.push(`/?pageId=${pageId}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur de validation");
+      setError(err instanceof Error ? err.message : "Validation error");
     } finally {
       setIsLoading(false);
     }
@@ -62,20 +62,20 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
               htmlFor="pageInput"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              ID ou URL de la page Confluence
+              Confluence Page ID or URL
             </label>
             <input
               id="pageInput"
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="123456 ou https://your-domain.atlassian.net/wiki/spaces/SPACE/pages/123456/Page+Title"
+              placeholder="123456 or https://your-domain.atlassian.net/wiki/spaces/SPACE/pages/123456/Page+Title"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               disabled={isLoading}
             />
             <p className="mt-2 text-sm text-gray-500">
-              Vous pouvez saisir soit l'ID numérique de la page, soit l'URL
-              complète de la page Confluence.
+              You can enter either the numeric page ID or the complete
+              Confluence page URL.
             </p>
           </div>
 
@@ -94,10 +94,10 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
               {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Chargement...
+                  Loading...
                 </>
               ) : (
-                "Afficher la page"
+                "Display Page"
               )}
             </button>
 
@@ -107,7 +107,7 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
                 onClick={handleClear}
                 className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
               >
-                Effacer
+                Clear
               </button>
             )}
           </div>
@@ -115,21 +115,21 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
 
         <div className="mt-4 p-4 bg-blue-50 rounded-md">
           <h3 className="text-sm font-medium text-blue-800 mb-2">
-            Formats supportés :
+            Supported formats:
           </h3>
           <ul className="text-xs text-blue-700 space-y-1">
             <li>
-              • ID numérique :{" "}
+              • Numeric ID:{" "}
               <code className="bg-blue-100 px-1 rounded">123456</code>
             </li>
             <li>
-              • URL moderne :{" "}
+              • Modern URL:{" "}
               <code className="bg-blue-100 px-1 rounded">
                 https://domain.atlassian.net/wiki/spaces/SPACE/pages/123456/Title
               </code>
             </li>
             <li>
-              • URL legacy :{" "}
+              • Legacy URL:{" "}
               <code className="bg-blue-100 px-1 rounded">
                 https://domain.atlassian.net/wiki/pages/viewpage.action?pageId=123456
               </code>

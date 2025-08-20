@@ -92,7 +92,7 @@ export function renderADF(
         6: "text-sm font-bold mb-2",
       };
 
-      // Générer un ID pour l'ancrage
+      // Generate ID for anchor
       const headingText =
         node.content
           ?.map((child) => (child.type === "text" ? child.text : ""))
@@ -182,7 +182,7 @@ export function renderADF(
       return (
         <li key={key} className="mb-2">
           {node.content?.map((child, index) => {
-            // Pour les list items, on ne veut pas de margin bottom sur les paragraphes
+            // For list items, we don't want margin bottom on paragraphs
             if (child.type === "paragraph") {
               return (
                 <span key={index}>
@@ -425,10 +425,10 @@ export function renderADF(
       const mediaId = node.attrs?.id;
       const mediaType = node.attrs?.type || "file";
       const collection = node.attrs?.collection;
-      const alt = node.attrs?.alt || "Image Confluence";
+      const alt = node.attrs?.alt || "Confluence Image";
 
       if (mediaType === "file" && mediaId && options?.pageId) {
-        // Utiliser le composant hybride avec le pageId
+        // Use hybrid component with pageId
         return (
           <ConfluenceImage
             key={key}
@@ -440,7 +440,7 @@ export function renderADF(
         );
       }
 
-      // Fallback pour les médias non supportés
+      // Fallback for unsupported media
       return (
         <div
           key={key}
@@ -461,7 +461,7 @@ export function renderADF(
               />
             </svg>
           </div>
-          <p className="text-sm text-gray-600 font-medium">Média Confluence</p>
+          <p className="text-sm text-gray-600 font-medium">Confluence Media</p>
           <p className="text-xs text-gray-500">ID: {mediaId}</p>
           <p className="text-xs text-gray-500">Type: {mediaType}</p>
         </div>
@@ -480,7 +480,7 @@ export function renderADF(
       const extensionType = node.attrs?.extensionType || "unknown";
       const extensionKey = node.attrs?.extensionKey || "unknown";
 
-      // Cas spécial pour la table des matières Confluence
+      // Special case for Confluence table of contents
       if (
         extensionType === "com.atlassian.confluence.macro.core" &&
         extensionKey === "toc"
@@ -508,14 +508,14 @@ export function renderADF(
               />
             </svg>
             <span className="font-medium text-blue-800">
-              Extension Confluence
+              Confluence Extension
             </span>
           </div>
           <p className="text-sm text-blue-700">
             <strong>Type:</strong> {extensionType}
           </p>
           <p className="text-sm text-blue-700">
-            <strong>Clé:</strong> {extensionKey}
+            <strong>Key:</strong> {extensionKey}
           </p>
           {node.content && node.content.length > 0 && (
             <div className="mt-3 pt-3 border-t border-blue-200">
@@ -576,7 +576,7 @@ export function renderADF(
 
     case "date":
       const timestamp = node.attrs?.timestamp;
-      const dateValue = timestamp ? new Date(timestamp).toLocaleDateString() : "Date";
+      const dateValue = timestamp ? new Date(timestamp).toLocaleDateString('en-US') : "Date";
       
       return (
         <span key={key} className="inline-flex items-center px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
@@ -602,7 +602,7 @@ export function renderADF(
         </span>
       );
 
-    // Éléments non supportés - affichage de debug
+    // Unsupported elements - debug display
     default:
       if (process.env.NODE_ENV === "development") {
         return (
@@ -610,7 +610,7 @@ export function renderADF(
             key={key}
             className="bg-yellow-100 border border-yellow-300 p-2 rounded text-xs my-2"
           >
-            <strong>Type non supporté :</strong> {node.type}
+            <strong>Unsupported type:</strong> {node.type}
             {node.content && (
               <div className="mt-1">
                 {node.content.map((child, index) =>
@@ -622,7 +622,7 @@ export function renderADF(
         );
       }
 
-      // En production, essayer de rendre le contenu s'il existe
+      // In production, try to render content if it exists
       if (node.content) {
         return (
           <div key={key}>
