@@ -21,8 +21,19 @@ npm install @gravitek/confluence-mirror-next
 # Use in your React component
 import { ConfluencePage } from '@gravitek/confluence-mirror-next';
 
+// Option 1: Using numeric page ID
 <ConfluencePage
-  pageId="your-page-id"
+  pageId="123456"
+  config={{
+    baseUrl: "https://your-domain.atlassian.net",
+    email: "your-email@domain.com",
+    apiKey: "your-api-key"
+  }}
+/>
+
+// Option 2: Using full Confluence URL
+<ConfluencePage
+  url="https://your-domain.atlassian.net/wiki/spaces/SPACE/pages/123456/Page+Title"
   config={{
     baseUrl: "https://your-domain.atlassian.net",
     email: "your-email@domain.com",

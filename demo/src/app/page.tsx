@@ -5,11 +5,11 @@ import ConfluenceForm from "@/components/confluence-form";
 import { confluenceConfig } from "@/lib/confluence";
 
 interface HomeProps {
-  searchParams: Promise<{ pageId?: string }>;
+  searchParams: Promise<{ pageId?: string; url?: string }>;
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const { pageId } = await searchParams;
+  const { pageId, url } = await searchParams;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -34,7 +34,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         <ConfluenceForm initialPageId={pageId} />
 
-        {pageId && (
+        {(pageId || url) && (
           <div className="mt-8 max-w-5xl mx-auto">
             <Suspense
               fallback={
@@ -47,8 +47,9 @@ export default async function Home({ searchParams }: HomeProps) {
               }
             >
               <ConfluencePage
-                key={pageId}
+                key={pageId || url}
                 pageId={pageId}
+                url={url}
                 config={confluenceConfig}
               />
             </Suspense>

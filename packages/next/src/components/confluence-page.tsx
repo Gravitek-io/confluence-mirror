@@ -2,7 +2,8 @@ import { ConfluenceClient, processADFWithMedia, processADFWithTOC } from '@gravi
 import OptimizedADFRenderer from './optimized-adf-renderer';
 
 interface ConfluencePageProps {
-  pageId: string;
+  pageId?: string;
+  url?: string;
 }
 
 interface ConfluencePageConfig {
@@ -13,11 +14,42 @@ interface ConfluencePageConfig {
 
 export default async function ConfluencePage({ 
   pageId, 
+  url,
   config 
 }: ConfluencePageProps & { config: ConfluencePageConfig }) {
   try {
+    // Validate input parameters
+    if (!pageId && !url) {
+      return (
+        <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
+          <h3 className="text-lg font-semibold text-red-800 mb-2">Invalid parameters</h3>
+          <p className="text-red-700">
+            Either pageId or url must be provided.
+          </p>
+        </div>
+      );
+    }
+
     const confluenceClient = new ConfluenceClient(config.baseUrl, config.email, config.apiKey);
-    const page = await confluenceClient.getPage(pageId);
+    
+    // Extract pageId from URL if provided
+    let resolvedPageId = pageId;
+    if (url && !pageId) {
+      resolvedPageId = ConfluenceClient.extractPageIdFromUrl(url);
+      if (!resolvedPageId) {
+        return (
+          <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Invalid URL</h3>
+            <p className="text-red-700 mb-2">
+              Unable to extract page ID from the provided URL.
+            </p>
+            <p className="text-sm text-red-600">URL: {url}</p>
+          </div>
+        );
+      }
+    }
+
+    const page = await confluenceClient.getPage(resolvedPageId!);
     
     // Get the ADF content
     const adfContent = page.body.atlas_doc_format?.value;
@@ -49,7 +81,7 @@ export default async function ConfluencePage({
     // Pre-process ADF with media URLs (server-side)
     let processedContent = parsedContent;
     if (storageContent) {
-      processedContent = await processADFWithMedia(parsedContent, storageContent, pageId);
+      processedContent = await processADFWithMedia(parsedContent, storageContent, resolvedPageId);
     }
 
     // Pre-process ADF with TOC extraction (server-side)
@@ -86,7 +118,7 @@ export default async function ConfluencePage({
             <div className="confluence-hybrid-content">
               <OptimizedADFRenderer 
                 document={enrichedDocument} 
-                pageId={pageId} 
+                pageId={resolvedPageId} 
                 tableOfContents={tableOfContents}
               />
             </div>
@@ -102,7 +134,7 @@ export default async function ConfluencePage({
       <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
         <h3 className="text-lg font-semibold text-red-800 mb-2">Loading error</h3>
         <p className="text-red-700 mb-4">
-          Unable to load Confluence page ID: {pageId}
+          Unable to load Confluence page ID: {resolvedPageId}
         </p>
         <details className="text-sm text-red-600">
           <summary className="cursor-pointer hover:text-red-800">Error details</summary>
