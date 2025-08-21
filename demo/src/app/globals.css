@@ -43,6 +43,9 @@ body {
   .confluence-hybrid-content .text-purple-800 {
     color: theme(colors.purple.800) !important;
   }
+  .confluence-hybrid-content .text-orange-800 {
+    color: theme(colors.orange.800) !important;
+  }
 
   /* Fix code blocks */
   .confluence-hybrid-content pre {
@@ -113,6 +116,7 @@ body {
   .confluence-hybrid-content .bg-yellow-100 { background-color: theme(colors.yellow.100); }
   .confluence-hybrid-content .bg-green-100 { background-color: theme(colors.green.100); }
   .confluence-hybrid-content .bg-purple-100 { background-color: theme(colors.purple.100); }
+  .confluence-hybrid-content .bg-orange-50 { background-color: theme(colors.orange.50); }
   
   .confluence-hybrid-content .border-gray-300 { border-color: theme(colors.gray.300); }
   .confluence-hybrid-content .border-blue-300 { border-color: theme(colors.blue.300); }
@@ -120,4 +124,9 @@ body {
   .confluence-hybrid-content .border-yellow-300 { border-color: theme(colors.yellow.300); }
   .confluence-hybrid-content .border-green-300 { border-color: theme(colors.green.300); }
   .confluence-hybrid-content .border-purple-300 { border-color: theme(colors.purple.300); }
+  .confluence-hybrid-content .border-orange-200 { border-color: theme(colors.orange.200); }
+  .confluence-hybrid-content .border-green-200 { border-color: theme(colors.green.200); }
+  .confluence-hybrid-content .border-blue-200 { border-color: theme(colors.blue.200); }
+  .confluence-hybrid-content .border-red-200 { border-color: theme(colors.red.200); }
+  .confluence-hybrid-content .border-gray-200 { border-color: theme(colors.gray.200); }
 }

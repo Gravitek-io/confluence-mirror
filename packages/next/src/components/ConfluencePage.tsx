@@ -1,5 +1,5 @@
-import { ConfluenceClient, processADFWithMedia, processADFWithTOC } from '@gravitek/confluence-mirror-core';
-import OptimizedADFRenderer from './optimized-adf-renderer';
+import { ConfluenceClient, processADFWithMedia, processADFWithTOC } from 'confluence-mirror-core';
+import OptimizedADFRenderer from './OptimizedAdfRenderer';
 
 interface ConfluencePageProps {
   pageId?: string;
@@ -17,6 +17,9 @@ export default async function ConfluencePage({
   url,
   config 
 }: ConfluencePageProps & { config: ConfluencePageConfig }) {
+  // Extract pageId from URL if provided
+  let resolvedPageId: string | undefined = pageId;
+  
   try {
     // Validate input parameters
     if (!pageId && !url) {
@@ -32,10 +35,8 @@ export default async function ConfluencePage({
 
     const confluenceClient = new ConfluenceClient(config.baseUrl, config.email, config.apiKey);
     
-    // Extract pageId from URL if provided
-    let resolvedPageId = pageId;
     if (url && !pageId) {
-      resolvedPageId = ConfluenceClient.extractPageIdFromUrl(url);
+      resolvedPageId = ConfluenceClient.extractPageIdFromUrl(url) || undefined;
       if (!resolvedPageId) {
         return (
           <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
@@ -49,7 +50,16 @@ export default async function ConfluencePage({
       }
     }
 
-    const page = await confluenceClient.getPage(resolvedPageId!);
+    if (!resolvedPageId) {
+      return (
+        <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
+          <h3 className="text-lg font-semibold text-red-800 mb-2">Missing page ID</h3>
+          <p className="text-red-700">No valid page ID could be determined.</p>
+        </div>
+      );
+    }
+
+    const page = await confluenceClient.getPage(resolvedPageId);
     
     // Get the ADF content
     const adfContent = page.body.atlas_doc_format?.value;
@@ -134,7 +144,7 @@ export default async function ConfluencePage({
       <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
         <h3 className="text-lg font-semibold text-red-800 mb-2">Loading error</h3>
         <p className="text-red-700 mb-4">
-          Unable to load Confluence page ID: {resolvedPageId}
+          Unable to load Confluence page ID: {resolvedPageId || pageId || 'unknown'}
         </p>
         <details className="text-sm text-red-600">
           <summary className="cursor-pointer hover:text-red-800">Error details</summary>

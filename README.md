@@ -8,18 +8,18 @@ Render Confluence content in React applications.
 
 This repository contains:
 
-- **packages/core** - `@gravitek/confluence-mirror-core`: Pure logic for Confluence API & ADF processing
-- **packages/next** - `@gravitek/confluence-mirror-next`: Next.js React components with Tailwind styling
+- **packages/core** - `confluence-mirror-core`: Pure logic for Confluence API & ADF processing
+- **packages/next** - `confluence-mirror-next`: Next.js React components with Tailwind styling
 - **demo/** - Interactive demo application showcasing the library
 
 ## 🚀 Quick Start
 
 ```bash
 # Install a package in your Next.js app
-npm install @gravitek/confluence-mirror-next
+npm install confluence-mirror-next
 
 # Use in your React component
-import { ConfluencePage } from '@gravitek/confluence-mirror-next';
+import { ConfluencePage } from 'confluence-mirror-next';
 
 // Option 1: Using numeric page ID
 <ConfluencePage
@@ -44,7 +44,7 @@ import { ConfluencePage } from '@gravitek/confluence-mirror-next';
 
 ## 📦 Packages
 
-### @gravitek/confluence-mirror-core
+### confluence-mirror-core
 
 Framework-agnostic core logic for Confluence integration:
 
@@ -54,7 +54,7 @@ Framework-agnostic core logic for Confluence integration:
 - ✅ Table of contents extraction
 - ✅ TypeScript types
 
-### @gravitek/confluence-mirror-next
+### confluence-mirror-next
 
 Next.js specific React components:
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import ShowroomContent from '@/components/showroom-content';
-import { ADFDocument } from '@/lib/adf-renderer';
+import ShowroomContent from '@/components/ShowroomContent';
+import { ADFDocument } from 'confluence-mirror-core';
 
 export default function ShowroomPage() {
   // Demo ADF document with all supported types
@@ -217,6 +217,18 @@ export default function ShowroomPage() {
             type: 'paragraph',
             content: [
               { type: 'text', text: 'This is a success panel.' }
+            ]
+          }
+        ]
+      },
+      {
+        type: 'panel',
+        attrs: { panelType: 'note' },
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              { type: 'text', text: 'This is a note panel. It provides additional information or context.' }
             ]
           }
         ]

@@ -1,5 +1,5 @@
 {
-  "name": "@gravitek/confluence-mirror-core",
+  "name": "confluence-mirror-core",
   "version": "0.1.0",
   "description": "Core logic for Confluence page rendering - API client, ADF processing, media handling. Unofficial, not affiliated with Atlassian.",
   "main": "dist/index.js",

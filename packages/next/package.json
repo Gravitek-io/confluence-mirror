@@ -1,5 +1,5 @@
 {
-  "name": "@gravitek/confluence-mirror-next",
+  "name": "confluence-mirror-next",
   "version": "0.1.0",
   "description": "Next.js React components for rendering Confluence pages with Tailwind CSS styling. Unofficial, not affiliated with Atlassian.",
   "main": "dist/index.js",
@@ -34,7 +34,7 @@
     "react": ">=18.0.0"
   },
   "dependencies": {
-    "@gravitek/confluence-mirror-core": "file:../core",
+    "confluence-mirror-core": "file:../core",
     "@tailwindcss/postcss": "^4.1.11",
     "tailwindcss": "^4.1.11"
   },

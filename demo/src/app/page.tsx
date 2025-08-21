@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { ConfluencePage } from "@gravitek/confluence-mirror-next";
-import ConfluenceForm from "@/components/confluence-form";
+import { ConfluencePage } from "confluence-mirror-next";
+import ConfluenceForm from "@/components/ConfluenceForm";
 import { confluenceConfig } from "@/lib/confluence";
 
 interface HomeProps {

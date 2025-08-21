@@ -1,8 +1,8 @@
 import React from "react";
-import OptimizedMedia from "./optimized-media";
-import OptimizedTOC from "./optimized-toc";
+import OptimizedMedia from "./OptimizedMedia";
+import OptimizedTOC from "./OptimizedToc";
 
-import { ADFNode, ADFDocument } from '@gravitek/confluence-mirror-core';
+import { ADFNode, ADFDocument } from 'confluence-mirror-core';
 
 interface RenderOptions {
   pageId?: string;
@@ -254,7 +254,7 @@ export function renderADF(
           ),
         },
         success: { 
-          classes: "bg-green-50 border-green-200 text-green-800",
+          classes: "bg-green-50 border-green-300 text-green-800",
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
