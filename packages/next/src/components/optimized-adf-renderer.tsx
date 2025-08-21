@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderADF } from './adf-renderer';
-import { ADFDocument, TocItem } from 'confluence-mirror-core';
+import { ADFDocument, TocItem } from '@gravitek/confluence-mirror-core';
 import OptimizedTOC from './optimized-toc';
 
 interface OptimizedADFRendererProps {

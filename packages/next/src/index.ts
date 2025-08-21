@@ -11,4 +11,4 @@ export type {
   ADFNode, 
   ConfluencePage as ConfluencePageType, 
   TocItem 
-} from 'confluence-mirror-core';
+} from '@gravitek/confluence-mirror-core';

@@ -469,6 +469,76 @@ export default function ShowroomPage() {
         ]
       },
       {
+        type: 'bodiedExtension',
+        attrs: {
+          extensionType: 'com.atlassian.confluence.macro.note',
+          extensionKey: 'note-macro',
+          title: 'Information Note'
+        },
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              { type: 'text', text: 'This is a bodied extension with custom content inside. It can contain any ADF content including ' },
+              { type: 'text', text: 'bold text', marks: [{ type: 'strong' }] },
+              { type: 'text', text: ' and links.' }
+            ]
+          }
+        ]
+      },
+      {
+        type: 'heading',
+        attrs: { level: 2 },
+        content: [
+          { type: 'text', text: 'Task Lists' }
+        ]
+      },
+      {
+        type: 'taskList',
+        attrs: { localId: 'task-list-1' },
+        content: [
+          {
+            type: 'taskItem',
+            attrs: { localId: 'task-1', state: 'DONE' },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Completed task - this one is done!' }
+                ]
+              }
+            ]
+          },
+          {
+            type: 'taskItem',
+            attrs: { localId: 'task-2', state: 'TODO' },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Pending task - still needs to be completed' }
+                ]
+              }
+            ]
+          },
+          {
+            type: 'taskItem',
+            attrs: { localId: 'task-3', state: 'TODO' },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Another task with ' },
+                  { type: 'text', text: 'formatting', marks: [{ type: 'em' }] },
+                  { type: 'text', text: ' and ' },
+                  { type: 'text', text: 'links', marks: [{ type: 'link', attrs: { href: 'https://example.com' } }] }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         type: 'heading',
         attrs: { level: 2 },
         content: [

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ConfluenceClient } from "confluence-mirror-core";
+import { ConfluenceClient } from "@gravitek/confluence-mirror-core";
 
 interface ConfluenceFormProps {
   initialPageId?: string;

@@ -1,4 +1,4 @@
-import { ConfluenceClient, processADFWithMedia, processADFWithTOC } from 'confluence-mirror-core';
+import { ConfluenceClient, processADFWithMedia, processADFWithTOC } from '@gravitek/confluence-mirror-core';
 import OptimizedADFRenderer from './optimized-adf-renderer';
 
 interface ConfluencePageProps {

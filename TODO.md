@@ -4,3 +4,5 @@
   - bodiedExtension
   - taskList
   - taskItem
+- Actuellement le component confluence-page prend un pageId en paramètre, comment pourrait-on faire pour qu'il accepte aussi un url ?
+- la convention de nommage pour les fichiers de composants doit être en PascalCase

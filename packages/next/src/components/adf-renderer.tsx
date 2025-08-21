@@ -2,7 +2,7 @@ import React from "react";
 import OptimizedMedia from "./optimized-media";
 import OptimizedTOC from "./optimized-toc";
 
-import { ADFNode, ADFDocument } from 'confluence-mirror-core';
+import { ADFNode, ADFDocument } from '@gravitek/confluence-mirror-core';
 
 interface RenderOptions {
   pageId?: string;
@@ -37,7 +37,7 @@ export function renderADF(
 
       // Check if any child would render as a block element
       const hasBlockElements = node.content.some((child) => {
-        return ['panel', 'codeBlock', 'blockquote', 'table', 'mediaGroup', 'mediaSingle', 'extension'].includes(child.type);
+        return ['panel', 'codeBlock', 'blockquote', 'table', 'mediaGroup', 'mediaSingle', 'extension', 'bodiedExtension', 'taskList'].includes(child.type);
       });
 
       // If paragraph contains block elements, render as div instead of p
@@ -688,6 +688,94 @@ export function renderADF(
             {node.content?.map((child, index) =>
               renderADF(child, index, options)
             )}
+          </div>
+        </div>
+      );
+
+    case "bodiedExtension":
+      const bodiedExtensionType = node.attrs?.extensionType || "unknown";
+      const bodiedExtensionKey = node.attrs?.extensionKey || "unknown";
+      const bodiedExtensionTitle = node.attrs?.title || "Extension";
+      
+      return (
+        <div
+          key={key}
+          className="bg-slate-50 border border-slate-200 rounded-lg p-4 my-4"
+        >
+          <div className="flex items-center mb-3">
+            <svg
+              className="h-5 w-5 text-slate-600 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+              />
+            </svg>
+            <span className="font-medium text-slate-800">{bodiedExtensionTitle}</span>
+          </div>
+          
+          {node.content && node.content.length > 0 && (
+            <div className="mt-3">
+              {node.content.map((child, index) =>
+                renderADF(child, index, options)
+              )}
+            </div>
+          )}
+          
+          <div className="mt-2 text-xs text-slate-500">
+            <span>Type: {bodiedExtensionType}</span>
+            {bodiedExtensionKey !== bodiedExtensionType && (
+              <span className="ml-2">Key: {bodiedExtensionKey}</span>
+            )}
+          </div>
+        </div>
+      );
+
+    case "taskList":
+      return (
+        <div key={key} className="my-4">
+          <div className="space-y-2">
+            {node.content?.map((child, index) =>
+              renderADF(child, index, options)
+            )}
+          </div>
+        </div>
+      );
+
+    case "taskItem":
+      const isCompleted = node.attrs?.state === "DONE";
+      const taskId = node.attrs?.localId || `task-${key}`;
+      
+      return (
+        <div key={key} className="flex items-start gap-3 py-1">
+          <div className="flex items-center mt-1">
+            <input
+              type="checkbox"
+              id={taskId}
+              checked={isCompleted}
+              readOnly
+              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+            />
+          </div>
+          <div className={`flex-1 ${isCompleted ? 'line-through text-gray-500' : ''}`}>
+            {node.content?.map((child, index) => {
+              // For task items, we don't want margin bottom on paragraphs
+              if (child.type === "paragraph") {
+                return (
+                  <span key={index}>
+                    {child.content?.map((textChild, textIndex) =>
+                      renderADF(textChild, textIndex, options)
+                    )}
+                  </span>
+                );
+              }
+              return renderADF(child, index, options);
+            })}
           </div>
         </div>
       );
