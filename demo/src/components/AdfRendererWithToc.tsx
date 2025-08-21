@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { renderADF, ADFNode, ADFDocument } from '@/lib/adf-renderer';
-import { useToc } from '@/lib/toc-context';
+import { renderADF, ADFNode, ADFDocument } from 'confluence-mirror-next';
+import { useToc } from '@/lib/TocContext';
 
 // Fonction pour extraire les titres du contenu ADF
 function extractHeadings(node: ADFNode | ADFDocument, addItem: (item: { id: string; title: string; level: number }) => void, existingSlugs: Set<string>) {
