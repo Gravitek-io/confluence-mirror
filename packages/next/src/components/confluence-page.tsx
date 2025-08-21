@@ -1,14 +1,22 @@
-import { confluenceClient } from '@/lib/confluence';
-import { processADFWithMedia } from '@/lib/media-processor';
-import { processADFWithTOC } from '@/lib/toc-processor';
-import OptimizedADFRenderer from '@/components/optimized-adf-renderer';
+import { ConfluenceClient, processADFWithMedia, processADFWithTOC } from 'confluence-mirror-core';
+import OptimizedADFRenderer from './optimized-adf-renderer';
 
 interface ConfluencePageProps {
   pageId: string;
 }
 
-export default async function ConfluencePage({ pageId }: ConfluencePageProps) {
+interface ConfluencePageConfig {
+  baseUrl: string;
+  email: string;
+  apiKey: string;
+}
+
+export default async function ConfluencePage({ 
+  pageId, 
+  config 
+}: ConfluencePageProps & { config: ConfluencePageConfig }) {
   try {
+    const confluenceClient = new ConfluenceClient(config.baseUrl, config.email, config.apiKey);
     const page = await confluenceClient.getPage(pageId);
     
     // Get the ADF content

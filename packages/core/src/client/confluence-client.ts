@@ -111,6 +111,7 @@ export class ConfluenceClient {
    * Supports formats like:
    * - https://your-domain.atlassian.net/wiki/spaces/SPACE/pages/123456/Page+Title
    * - https://your-domain.atlassian.net/wiki/pages/viewpage.action?pageId=123456
+   * - https://your-domain.atlassian.net/wiki/spaces/SPACE/overview?homepageId=123456
    */
   static extractPageIdFromUrl(url: string): string | null {
     // Pattern 1: /pages/123456/title format
@@ -123,6 +124,12 @@ export class ConfluenceClient {
     const match2 = url.match(/[?&]pageId=(\d+)/);
     if (match2) {
       return match2[1];
+    }
+
+    // Pattern 3: homepageId=123456 query parameter (space overview pages)
+    const match3 = url.match(/[?&]homepageId=(\d+)/);
+    if (match3) {
+      return match3[1];
     }
 
     return null;

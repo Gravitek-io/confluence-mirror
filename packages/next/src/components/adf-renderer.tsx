@@ -1,23 +1,8 @@
 import React from "react";
-import OptimizedMedia from "@/components/optimized-media";
-import OptimizedTOC from "@/components/optimized-toc";
+import OptimizedMedia from "./optimized-media";
+import OptimizedTOC from "./optimized-toc";
 
-export interface ADFNode {
-  type: string;
-  attrs?: Record<string, any>;
-  content?: ADFNode[];
-  text?: string;
-  marks?: Array<{
-    type: string;
-    attrs?: Record<string, any>;
-  }>;
-}
-
-export interface ADFDocument {
-  version: number;
-  type: "doc";
-  content: ADFNode[];
-}
+import { ADFNode, ADFDocument } from 'confluence-mirror-core';
 
 interface RenderOptions {
   pageId?: string;
@@ -111,6 +96,8 @@ export function renderADF(
         {
           key,
           id: headingId,
+          'data-adf-type': 'heading',
+          'data-adf-level': validLevel,
           className:
             headingClasses[validLevel as keyof typeof headingClasses] ||
             headingClasses[1],
@@ -255,7 +242,8 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="w-6 h-6"
+              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
             >
               <path
                 strokeLinecap="round"
@@ -274,7 +262,8 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="w-6 h-6"
+              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
             >
               <path
                 strokeLinecap="round"
@@ -285,7 +274,7 @@ export function renderADF(
           ),
         },
         warning: {
-          classes: "bg-yellow-50 border-yellow-200 text-yellow-800",
+          classes: "bg-orange-50 border-orange-200 text-orange-800",
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -293,7 +282,8 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="w-6 h-6"
+              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
             >
               <path
                 strokeLinecap="round"
@@ -312,7 +302,8 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="w-6 h-6"
+              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
             >
               <path
                 strokeLinecap="round"
@@ -331,7 +322,8 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="w-6 h-6"
+              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
             >
               <path
                 strokeLinecap="round"
@@ -346,7 +338,9 @@ export function renderADF(
       return (
         <div
           key={key}
-          className={`p-4 border rounded-lg my-4 ${
+          data-adf-type="panel"
+          data-panel-type={panelType}
+          className={`p-4 border rounded-lg my-6 ${
             panelProperties[panelType as keyof typeof panelProperties]
               ?.classes || panelProperties.info.classes
           }`}
@@ -557,7 +551,7 @@ export function renderADF(
       return (
         <span
           key={key}
-          className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full border ${
+          className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-full border ${
             statusColors[statusColor as keyof typeof statusColors] || statusColors.neutral
           }`}
         >

@@ -1,27 +1,36 @@
 {
-  "name": "confluence-to-react",
+  "name": "confluence-mirror",
   "version": "0.1.0",
+  "description": "Render Confluence content in React applications - Unofficial, not affiliated with Atlassian",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "demo"
+  ],
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "npm run dev --workspace=demo",
+    "build": "npm run build --workspaces",
+    "build:core": "npm run build --workspace=packages/core",
+    "build:next": "npm run build --workspace=packages/next",
+    "build:demo": "npm run build --workspace=demo",
+    "lint": "npm run lint --workspaces"
   },
-  "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.4.7"
+  "keywords": [
+    "confluence",
+    "react",
+    "nextjs",
+    "atlassian",
+    "adf"
+  ],
+  "author": "Gravitek <hello@gravitek.io>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gravitek-io/confluence-mirror.git"
   },
+  "homepage": "https://github.com/Gravitek-io/confluence-mirror.git",
   "devDependencies": {
     "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "15.4.7",
-    "@eslint/eslintrc": "^3"
+    "@types/node": "^20"
   }
 }

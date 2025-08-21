@@ -1,10 +1,4 @@
-import { ADFDocument, ADFNode } from './adf-renderer';
-
-export interface TocItem {
-  id: string;
-  title: string;
-  level: number;
-}
+import { ADFDocument, ADFNode, TocItem } from '../types';
 
 // Extract text content from ADF nodes
 function extractTextFromContent(content: ADFNode[]): string {

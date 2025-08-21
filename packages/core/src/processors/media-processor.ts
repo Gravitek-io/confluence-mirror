@@ -1,4 +1,4 @@
-import { ADFDocument, ADFNode } from './adf-renderer';
+import { ADFDocument, ADFNode } from '../types';
 
 interface MediaMapping {
   url: string;
@@ -87,6 +87,21 @@ function enrichMediaNodes(
   // Handle media nodes
   if (node.type === 'media' && node.attrs?.type === 'file' && node.attrs?.id) {
     const mediaId = node.attrs.id;
+    
+    // Special handling for showroom page demo image
+    if (mediaId === 'placeholder-image') {
+      const enrichedNode = {
+        ...node,
+        attrs: {
+          ...node.attrs,
+          // Add our processed data with Unsplash demo image
+          processedUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+          processedType: 'image',
+        }
+      };
+      mediaCounter.count++;
+      return enrichedNode;
+    }
     
     // Try to find media mapping using various strategies
     const possibleKeys = [

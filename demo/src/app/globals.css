@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  /* Enhanced styling for confluence content */
+  .confluence-hybrid-content {
+    color: theme(colors.gray.900);
+  }
+
+  /* Ensure proper text colors in panels */
+  .confluence-hybrid-content .text-blue-800 {
+    color: theme(colors.blue.800) !important;
+  }
+  .confluence-hybrid-content .text-green-800 {
+    color: theme(colors.green.800) !important;
+  }
+  .confluence-hybrid-content .text-yellow-800 {
+    color: theme(colors.yellow.800) !important;
+  }
+  .confluence-hybrid-content .text-red-800 {
+    color: theme(colors.red.800) !important;
+  }
+  .confluence-hybrid-content .text-gray-800 {
+    color: theme(colors.gray.800) !important;
+  }
+  .confluence-hybrid-content .text-purple-800 {
+    color: theme(colors.purple.800) !important;
+  }
+
+  /* Fix code blocks */
+  .confluence-hybrid-content pre {
+    background-color: theme(colors.gray.800);
+    color: theme(colors.gray.100);
+    padding: theme(spacing.4);
+    border-radius: theme(borderRadius.lg);
+    overflow-x: auto;
+    margin-top: theme(spacing.4);
+    margin-bottom: theme(spacing.4);
+  }
+
+  .confluence-hybrid-content pre code {
+    color: theme(colors.gray.100);
+  }
+
+  /* Fix inline code */
+  .confluence-hybrid-content code:not(pre code) {
+    background-color: theme(colors.gray.100);
+    padding: theme(spacing.1) theme(spacing.1);
+    border-radius: theme(borderRadius.DEFAULT);
+    font-size: theme(fontSize.sm);
+    font-family: theme(fontFamily.mono);
+    color: theme(colors.gray.900);
+  }
+
+  /* Ensure proper heading spacing */
+  .confluence-hybrid-content h1 {
+    margin-top: theme(spacing.8);
+    margin-bottom: theme(spacing.6);
+  }
+  .confluence-hybrid-content h2 {
+    margin-top: theme(spacing.6);
+    margin-bottom: theme(spacing.4);
+  }
+  .confluence-hybrid-content h3 {
+    margin-top: theme(spacing.6);
+    margin-bottom: theme(spacing.4);
+  }
+
+  /* Panel styling and spacing */
+  .confluence-hybrid-content [data-adf-type="panel"] {
+    margin-bottom: theme(spacing.6);
+  }
+
+  .confluence-hybrid-content [data-adf-type="panel"] + [data-adf-type="panel"] {
+    margin-top: theme(spacing.6);
+  }
+
+  /* Remove bottom margin from last element in panels to balance spacing */
+  .confluence-hybrid-content [data-adf-type="panel"] > div > div:last-child > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Force normal text style in panels (not italic) */
+  .confluence-hybrid-content [data-adf-type="panel"] {
+    font-style: normal !important;
+  }
+
+  .confluence-hybrid-content [data-adf-type="panel"] * {
+    font-style: normal !important;
+  }
+
+  /* Ensure status badge classes are available */
+  .confluence-hybrid-content .bg-gray-100 { background-color: theme(colors.gray.100); }
+  .confluence-hybrid-content .bg-blue-100 { background-color: theme(colors.blue.100); }
+  .confluence-hybrid-content .bg-red-100 { background-color: theme(colors.red.100); }
+  .confluence-hybrid-content .bg-yellow-100 { background-color: theme(colors.yellow.100); }
+  .confluence-hybrid-content .bg-green-100 { background-color: theme(colors.green.100); }
+  .confluence-hybrid-content .bg-purple-100 { background-color: theme(colors.purple.100); }
+  
+  .confluence-hybrid-content .border-gray-300 { border-color: theme(colors.gray.300); }
+  .confluence-hybrid-content .border-blue-300 { border-color: theme(colors.blue.300); }
+  .confluence-hybrid-content .border-red-300 { border-color: theme(colors.red.300); }
+  .confluence-hybrid-content .border-yellow-300 { border-color: theme(colors.yellow.300); }
+  .confluence-hybrid-content .border-green-300 { border-color: theme(colors.green.300); }
+  .confluence-hybrid-content .border-purple-300 { border-color: theme(colors.purple.300); }
+}

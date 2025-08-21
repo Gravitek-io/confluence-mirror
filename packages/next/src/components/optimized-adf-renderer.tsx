@@ -1,7 +1,7 @@
 import React from 'react';
-import { renderADF, ADFDocument } from '@/lib/adf-renderer';
-import { TocItem } from '@/lib/toc-processor';
-import OptimizedTOC from '@/components/optimized-toc';
+import { renderADF } from './adf-renderer';
+import { ADFDocument, TocItem } from 'confluence-mirror-core';
+import OptimizedTOC from './optimized-toc';
 
 interface OptimizedADFRendererProps {
   document: ADFDocument;

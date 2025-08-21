@@ -1,0 +1,49 @@
+{
+  "name": "@gravitek/confluence-mirror-next",
+  "version": "0.1.0",
+  "description": "Next.js React components for rendering Confluence pages with Tailwind CSS styling. Unofficial, not affiliated with Atlassian.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "styles"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "confluence",
+    "nextjs",
+    "react",
+    "tailwindcss",
+    "components",
+    "atlassian"
+  ],
+  "author": "Gravitek <hello@gravitek.io>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gravitek-io/confluence-mirror.git",
+    "directory": "packages/next"
+  },
+  "homepage": "https://github.com/Gravitek-io/confluence-mirror.git",
+  "peerDependencies": {
+    "next": ">=13.0.0",
+    "react": ">=18.0.0"
+  },
+  "dependencies": {
+    "@gravitek/confluence-mirror-core": "file:../core",
+    "@tailwindcss/postcss": "^4.1.11",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "typescript": "^5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

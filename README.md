@@ -1,149 +1,80 @@
-# Confluence to React
+# Confluence Mirror
 
-A Next.js application that displays and converts Confluence page content to React with modern styling.
+Render Confluence content in React applications.
 
-## ✨ Features
+> **Disclaimer:** This is an unofficial library, not affiliated with Atlassian.
 
-- **Hybrid ADF rendering**: Combines beautiful ADF formatting with functional Storage images
-- **Automatic table of contents**: Auto-generated TOC from page headings
-- **Optimized images**: Proper Confluence image display with width constraints
-- **Full support**: Text, headings, lists, tables, images, captions, macros
-- **Server-side rendering**: Fast page loads with Next.js App Router
+## 🏗 Monorepo Structure
 
-## 🚀 Installation
+This repository contains:
 
-1. **Clone the project**
+- **packages/core** - `@gravitek/confluence-mirror-core`: Pure logic for Confluence API & ADF processing
+- **packages/next** - `@gravitek/confluence-mirror-next`: Next.js React components with Tailwind styling
+- **demo/** - Interactive demo application showcasing the library
+
+## 🚀 Quick Start
+
 ```bash
-git clone <your-repo>
-cd confluence-to-react
+# Install a package in your Next.js app
+npm install @gravitek/confluence-mirror-next
+
+# Use in your React component
+import { ConfluencePage } from '@gravitek/confluence-mirror-next';
+
+<ConfluencePage
+  pageId="your-page-id"
+  config={{
+    baseUrl: "https://your-domain.atlassian.net",
+    email: "your-email@domain.com",
+    apiKey: "your-api-key"
+  }}
+/>
 ```
 
-2. **Install dependencies**
+## 📦 Packages
+
+### @gravitek/confluence-mirror-core
+
+Framework-agnostic core logic for Confluence integration:
+
+- ✅ Confluence REST API client
+- ✅ ADF (Atlas Document Format) processing
+- ✅ Media URL rewriting
+- ✅ Table of contents extraction
+- ✅ TypeScript types
+
+### @gravitek/confluence-mirror-next
+
+Next.js specific React components:
+
+- ✅ Server Components support
+- ✅ Tailwind CSS styling (customizable)
+- ✅ Optimized rendering
+- ✅ Automatic TOC generation
+
+## 🎨 Demo
+
+Run the interactive demo locally:
+
 ```bash
+git clone https://github.com/Gravitek-io/confluence-mirror
+cd confluence-mirror
 npm install
-# or
-yarn install
-```
-
-3. **Configuration**
-```bash
-# Copy the example environment file
-cp .env.example .env.local
-```
-
-## 🔧 Configuration
-
-### 1. Create a Confluence API token
-
-1. Log in to your Atlassian account
-2. Go to **Account Settings** → **Security** → **API tokens**
-3. Click **Create API token**
-4. Give your token a name (e.g., "Confluence to React")
-5. Copy the generated token
-
-### 2. Configure environment variables
-
-Edit the `.env.local` file with your information:
-
-```env
-# Base URL of your Confluence instance (without trailing slash)
-CONFLUENCE_BASE_URL=https://your-domain.atlassian.net
-
-# Email address of your Confluence account
-CONFLUENCE_EMAIL=your.email@example.com
-
-# Confluence API key (generate from Account Settings > Security > API tokens)
-CONFLUENCE_API_KEY=your_confluence_api_key
-
-# Public Confluence URL for links (same value as CONFLUENCE_BASE_URL)
-NEXT_PUBLIC_CONFLUENCE_BASE_URL=https://your-domain.atlassian.net
-```
-
-## 🏃‍♂️ Getting Started
-
-```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Visit http://localhost:3000 to see the demo in action.
 
-## 📖 Usage
+## 📖 Documentation
 
-1. **Home page**: Enter a Confluence page URL or page ID
-2. **Validation**: Click "Display page" to load the content
-3. **Content display**: The page will be rendered using the hybrid ADF approach
-
-### 🎨 Showroom
-
-Visit `/showroom` to see a comprehensive demonstration of all supported Confluence elements:
-- Text formatting (bold, italic, code, links)
-- Lists (bulleted and numbered)
-- Status indicators and mentions
-- Panels (info, warning, error, success)
-- Tables with styled headers
-- Code blocks and quotes
-- And much more!
-
-## 🎯 Hybrid Rendering
-
-The application uses a hybrid approach that offers the best experience:
-- ✅ Perfect formatting with ADF (Atlas Document Format)
-- ✅ Functional images from Storage format
-- ✅ Interactive table of contents
-- ✅ Full Confluence elements support
-
-## 🛠️ Technical Architecture
-
-### Main Components
-
-- **`ConfluencePage`**: Main page component with hybrid rendering
-- **`ADFRendererWithToc`**: Hybrid ADF rendering with TOC support
-- **`ConfluenceImage`**: Optimized image component with Storage mapping
-- **`TocProvider`**: React context for TOC management
-
-### APIs
-
-- **`/api/confluence-images/[pageId]`**: Image mappings extraction from Storage format
-
-### Hybrid Approach
-
-The main innovation is the hybrid approach that:
-1. Uses the **ADF API** for structure and formatting (headings, text, lists...)
-2. Extracts **image URLs** from the Confluence Storage format
-3. **Maps** ADF image IDs to real Storage URLs
-4. Generates **optimal rendering** combining advantages of both formats
-
-## 🔍 Troubleshooting
-
-### Images not displaying
-- Check your Confluence credentials in `.env.local`
-- Ensure your API token has proper permissions
-- Try "HTML Storage" mode to verify connectivity
-
-### Authentication errors
-- Verify that `CONFLUENCE_EMAIL` matches your Atlassian account
-- Regenerate a new API token if necessary
-- Test the `CONFLUENCE_BASE_URL` in your browser
-
-### Page not loading
-- Check that the Confluence page URL is accessible
-- Try with the page ID directly
-- Check the development server logs
-
-## 📚 Technologies Used
-
-- **Next.js 15**: React framework with App Router
-- **TypeScript**: Static typing
-- **Tailwind CSS**: Utility-first CSS framework
-- **Confluence API**: REST API v1 and v2
-- **Atlas Document Format (ADF)**: Confluence native format
+- [Core Package Documentation](./packages/core/README.md)
+- [Next.js Package Documentation](./packages/next/README.md)
+- [Demo App Setup](./demo/README.md)
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+Contributions welcome! Please read our contributing guidelines and submit pull requests.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+Apache-2.0 © Gravitek
