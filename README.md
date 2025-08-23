@@ -2,6 +2,8 @@
 
 Render Confluence content in React applications.
 
+![Confluence Mirror](./images/confluence-mirror.png)
+
 > **Disclaimer:** This is an unofficial library, not affiliated with Atlassian.
 
 ## 🏗 Monorepo Structure

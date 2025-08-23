@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { ConfluenceClient } from "confluence-mirror-core";
 
 interface ConfluenceFormProps {
   initialPageId?: string;
+  onPageIdChange: (pageId: string) => void;
+  onError?: (error: string) => void;
 }
 
-export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
+export default function ConfluenceForm({ 
+  initialPageId, 
+  onPageIdChange, 
+  onError 
+}: ConfluenceFormProps) {
   const [input, setInput] = useState(initialPageId || "");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,10 +42,11 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
         throw new Error("Page ID must be numeric. Example: 123456");
       }
 
-      // Update URL with pageId parameter
-      router.push(`/?pageId=${pageId}`);
+      onPageIdChange(pageId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Validation error");
+      const errorMessage = err instanceof Error ? err.message : "Validation error";
+      setError(errorMessage);
+      onError?.(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +55,7 @@ export default function ConfluenceForm({ initialPageId }: ConfluenceFormProps) {
   const handleClear = () => {
     setInput("");
     setError("");
-    router.push("/");
+    onPageIdChange("");
   };
 
   return (

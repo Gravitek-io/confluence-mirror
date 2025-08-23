@@ -2,25 +2,13 @@
 
 Transform your Confluence pages into beautiful React components! This project demonstrates how to seamlessly integrate Confluence content into modern web applications, bringing your documentation to life with native React rendering and Tailwind CSS styling.
 
-## 🚀 Quick Start
+## 🧪 Testing with Demo App
 
-```bash
-# From the repository root
-npm install
-npm run dev
-```
+### 🔧 Configuration
 
-Visit [http://localhost:3000](http://localhost:3000) to see the demo.
+Before running the demo, you need to configure your Confluence API access.
 
-## 🎨 Features
-
-- **Page Viewer**: Enter any Confluence page URL or ID to render it
-- **Showroom**: Comprehensive showcase of all supported ADF elements
-- **Live Examples**: See the library in action with real Confluence content
-
-## 🔧 Configuration
-
-### Environment Variables
+#### Environment Variables
 
 Create a `.env.local` file in the demo directory:
 
@@ -35,7 +23,7 @@ CONFLUENCE_EMAIL=your.email@domain.com
 CONFLUENCE_API_KEY=your_api_token_here
 ```
 
-### Confluence API Setup
+#### Confluence API Setup
 
 1. **Generate API Token**:
 
@@ -49,45 +37,153 @@ CONFLUENCE_API_KEY=your_api_token_here
    - Enter a valid Confluence page URL
    - If it loads, your configuration is correct!
 
-## 📖 Demo Pages
+### 🚀 Quick Start
 
-### Home Page (`/`)
+```bash
+# From the repository root
+npm install
+npm run dev
+```
 
+Visit [http://localhost:3000](http://localhost:3000) to see the demo.
+
+### 🎨 Demo Features
+
+- **Page Viewer**: Enter any Confluence page URL or ID to render it
+- **Showroom**: Comprehensive showcase of all supported ADF elements  
+- **How-to Guide**: Live examples of integration methods
+
+### 📖 Demo Pages
+
+#### Home Page (`/`)
 - **Page Input**: Enter Confluence URL or page ID
 - **Live Rendering**: See your pages transformed instantly
 - **Error Handling**: Clear feedback for invalid pages or auth issues
 
-### Showroom (`/showroom`)
-
+#### Showroom (`/showroom`)
 - **Complete Demo**: All supported ADF elements
 - **Styling Examples**: See default Tailwind styles in action
-- **Component Showcase**: Every feature of confluence-mirror-next
+- **Component Showcase**: Every feature of the library
 
-## 🎯 Implementation Examples
+#### How-to Guide (`/how-to`)
+- **Integration Examples**: Step-by-step integration guide
+- **Code Variants**: All-in-one vs individual components
+- **Live Documentation**: Interactive version of this README
 
-This project demonstrates how to build Confluence integration components:
+---
+
+## 🚀 Integration in your React App
+
+### Installation
+
+```bash
+npm install confluence-mirror-core
+```
+
+### Copy Components
+
+Copy the confluence components from this demo to your project:
+
+```bash
+# Copy all confluence components
+cp -r demo/src/components/confluence/ your-project/src/components/
+
+# Copy utility functions
+cp demo/src/lib/confluence.ts your-project/src/lib/
+```
+
+### Tailwind CSS Setup
+
+The components are styled with standard Tailwind CSS classes. Ensure your `tailwind.config.js` includes the component paths:
+
+```javascript
+module.exports = {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  // ... rest of your config
+}
+```
+
+### Configuration
+
+Create your Confluence client configuration:
+
+```typescript
+// src/lib/confluence.ts
+export const confluenceConfig = {
+  baseUrl: process.env.CONFLUENCE_BASE_URL!,
+  email: process.env.CONFLUENCE_EMAIL!,
+  apiKey: process.env.CONFLUENCE_API_KEY!
+};
+```
+
+### Usage Examples
+
+#### Option 1: All-in-one Component
+
+Simple usage with predefined layout:
 
 ```tsx
-// All-in-one server component (see src/components/confluence/)
 import ConfluenceMirrorServer from "@/components/confluence/ConfluenceMirrorServer";
+import { confluenceConfig } from "@/lib/confluence";
 
 <ConfluenceMirrorServer
   config={confluenceConfig}
-  pageId={pageId}
+  pageId="123456"
   showNavigation={true}
 />
 ```
 
+#### Option 2: Individual Components (Custom Layout)
+
+Full flexibility for custom layouts and styling:
+
 ```tsx
-// Individual components for custom layouts
 import ConfluencePage from "@/components/confluence/ConfluencePage";
 import NavigationTreeServer from "@/components/confluence/NavigationTreeServer";
+import { confluenceConfig } from "@/lib/confluence";
 
-<div className="grid grid-cols-4 gap-8">
-  <NavigationTreeServer pageId={pageId} config={config} />
-  <ConfluencePage pageId={pageId} config={config} />
+<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div className="lg:col-span-1">
+    <NavigationTreeServer 
+      pageId="123456" 
+      config={confluenceConfig} 
+      title="Navigation" 
+    />
+  </div>
+  
+  <div className="lg:col-span-2">
+    <ConfluencePage 
+      pageId="123456" 
+      config={confluenceConfig} 
+      showHeader={false} 
+    />
+  </div>
 </div>
 ```
+
+#### Optional: Page Input Form
+
+For user input functionality, you can also copy the form component:
+
+```tsx
+import ConfluenceForm from "@/components/confluence/ConfluenceForm";
+
+<ConfluenceForm
+  initialPageId=""
+  onPageIdChange={(pageId) => {
+    // Handle page change in your app
+    console.log('New page ID:', pageId);
+  }}
+  onError={(error) => {
+    // Handle validation errors
+    console.error('Form error:', error);
+  }}
+/>
+```
+
+---
 
 ## 🛠️ Development
 
@@ -96,16 +192,25 @@ import NavigationTreeServer from "@/components/confluence/NavigationTreeServer";
 ```
 demo/
 ├── src/
-│   ├── app/                  # Next.js App Router
-│   │   ├── page.tsx         # Home page with form
-│   │   ├── layout.tsx       # Root layout
-│   │   └── showroom/
-│   │       └── page.tsx     # Showroom demo
+│   ├── app/                     # Next.js App Router
+│   │   ├── page.tsx            # Home page with form
+│   │   ├── layout.tsx          # Root layout
+│   │   ├── showroom/           # Showroom demo
+│   │   └── how-to/             # Integration guide
 │   ├── components/
-│   │   ├── confluence-form.tsx  # Page input form
-│   │   └── showroom-content.tsx # Showroom content
+│   │   ├── confluence/         # 📦 Reusable components
+│   │   │   ├── ConfluenceMirrorServer.tsx
+│   │   │   ├── ConfluencePage.tsx
+│   │   │   ├── NavigationTreeServer.tsx
+│   │   │   ├── OptimizedAdfRenderer.tsx
+│   │   │   ├── OptimizedToc.tsx
+│   │   │   ├── OptimizedMedia.tsx
+│   │   │   ├── AdfRenderer.tsx
+│   │   │   └── ConfluenceForm.tsx
+│   │   ├── showroom/           # Demo-specific components
+│   │   └── ConfluenceFormDemo.tsx  # Demo wrapper
 │   └── lib/
-│       └── confluence.ts    # Environment config
+│       └── confluence.ts       # Configuration helper
 ├── package.json
 └── README.md
 ```
@@ -122,32 +227,6 @@ npm run start
 
 # Linting
 npm run lint
-```
-
-### Deployment Options
-
-**Vercel (Recommended)**:
-
-```bash
-# Deploy to Vercel
-vercel --prod
-
-# Set environment variables in Vercel dashboard
-# CONFLUENCE_BASE_URL, CONFLUENCE_EMAIL, CONFLUENCE_API_KEY
-```
-
-**Docker**:
-
-```dockerfile
-# Example Dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
 ```
 
 ## 🔍 Troubleshooting
@@ -220,10 +299,10 @@ import { OptimizedADFRenderer, OptimizedTOC } from "@/components/confluence";
 
 ## 📚 Learn More
 
-- [confluence-mirror-next Documentation](../packages/next/README.md)
 - [confluence-mirror-core Documentation](../packages/core/README.md)
 - [Confluence REST API Docs](https://developer.atlassian.com/cloud/confluence/rest/)
 - [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
 ## 🤝 Contributing
 

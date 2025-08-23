@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import ConfluenceMirrorServer from "@/components/confluence/ConfluenceMirrorServer";
-import ConfluenceForm from "@/components/ConfluenceForm";
+import ConfluenceFormDemo from "@/components/demo/ConfluenceFormDemo";
 import { confluenceConfig } from "@/lib/confluence";
 
 interface HomeProps {
@@ -30,15 +30,15 @@ export default async function Home({ searchParams }: HomeProps) {
               🎨 View Showroom
             </Link>
             <Link
-              href="/layouts"
+              href="/how-to"
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors"
             >
-              🎯 Layout Examples
+              📖 How to Integrate
             </Link>
           </div>
         </div>
 
-        <ConfluenceForm initialPageId={pageId} />
+        <ConfluenceFormDemo initialPageId={pageId} />
 
         {(pageId || url) && (
           <div className="mt-8 max-w-7xl mx-auto">

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import ShowroomContent from "@/components/showroom/ShowroomContent";
-import ShowroomNavigation from "@/components/showroom/ShowroomNavigation";
+import ShowroomContent from "@/components/demo/ShowroomContent";
+import ShowroomNavigation from "@/components/demo/ShowroomNavigation";
 import { ADFDocument } from "confluence-mirror-core";
 
 export default function ShowroomPage() {
