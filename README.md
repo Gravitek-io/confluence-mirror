@@ -1,75 +1,22 @@
 # Confluence Mirror
 
-Render Confluence content in React applications.
+Transform your Confluence pages into beautiful React components! This project demonstrates how to seamlessly integrate Confluence content into modern web applications.
 
 ![Confluence Mirror](./images/confluence-mirror.png)
 
-> **Disclaimer:** This is an unofficial library, not affiliated with Atlassian.
+> **Disclaimer:** This is an unofficial project, not affiliated with Atlassian.
 
-## 🏗 Monorepo Structure
+## 🏗 Project Structure
 
 This repository contains:
 
-- **packages/core** - `confluence-mirror-core`: Pure logic for Confluence API & ADF processing
-- **packages/next** - `confluence-mirror-next`: Next.js React components with Tailwind styling
-- **demo/** - Interactive demo application showcasing the library
+- **packages/core** - `confluence-mirror-core`: Framework-agnostic Confluence API & ADF processing
+- **demo/** - Complete implementation example with reusable React components
 
 ## 🚀 Quick Start
 
 ```bash
-# Install a package in your Next.js app
-npm install confluence-mirror-next
-
-# Use in your React component
-import { ConfluencePage } from 'confluence-mirror-next';
-
-// Option 1: Using numeric page ID
-<ConfluencePage
-  pageId="123456"
-  config={{
-    baseUrl: "https://your-domain.atlassian.net",
-    email: "your-email@domain.com",
-    apiKey: "your-api-key"
-  }}
-/>
-
-// Option 2: Using full Confluence URL
-<ConfluencePage
-  url="https://your-domain.atlassian.net/wiki/spaces/SPACE/pages/123456/Page+Title"
-  config={{
-    baseUrl: "https://your-domain.atlassian.net",
-    email: "your-email@domain.com",
-    apiKey: "your-api-key"
-  }}
-/>
-```
-
-## 📦 Packages
-
-### confluence-mirror-core
-
-Framework-agnostic core logic for Confluence integration:
-
-- ✅ Confluence REST API client
-- ✅ ADF (Atlas Document Format) processing
-- ✅ Media URL rewriting
-- ✅ Table of contents extraction
-- ✅ TypeScript types
-
-### confluence-mirror-next
-
-Next.js specific React components:
-
-- ✅ Server Components support
-- ✅ Tailwind CSS styling (customizable)
-- ✅ Optimized rendering
-- ✅ Automatic TOC generation
-
-## 🎨 Demo
-
-Run the interactive demo locally:
-
-```bash
+# Clone and run the demo
 git clone https://github.com/Gravitek-io/confluence-mirror
 cd confluence-mirror
 npm install
@@ -78,11 +25,39 @@ npm run dev
 
 Visit http://localhost:3000 to see the demo in action.
 
+## 🎯 Integration Approaches
+
+### Option 1: Install Core Package + Copy Components
+
+```bash
+# Install the core logic
+npm install confluence-mirror-core
+
+# Copy reusable components from demo
+cp -r demo/src/components/confluence/ your-project/src/components/
+cp demo/src/lib/confluence.ts your-project/src/lib/
+```
+
+### Option 2: Fork This Repository
+
+Fork this repository and customize the demo app for your needs.
+
+## 📦 Core Package
+
+### confluence-mirror-core
+
+Framework-agnostic core logic for Confluence integration:
+
+- ✅ Confluence REST API client
+- ✅ ADF (Atlas Document Format) processing  
+- ✅ Media URL rewriting
+- ✅ Table of contents extraction
+- ✅ TypeScript types
+
 ## 📖 Documentation
 
 - [Core Package Documentation](./packages/core/README.md)
-- [Next.js Package Documentation](./packages/next/README.md)
-- [Demo App Setup](./demo/README.md)
+- [Demo App Setup & Integration Guide](./demo/README.md)
 
 ## 🤝 Contributing
 
