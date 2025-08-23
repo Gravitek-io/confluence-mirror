@@ -50,22 +50,25 @@ Visit [http://localhost:3000](http://localhost:3000) to see the demo.
 ### 🎨 Demo Features
 
 - **Page Viewer**: Enter any Confluence page URL or ID to render it
-- **Showroom**: Comprehensive showcase of all supported ADF elements  
+- **Showroom**: Comprehensive showcase of all supported ADF elements
 - **How-to Guide**: Live examples of integration methods
 
 ### 📖 Demo Pages
 
 #### Home Page (`/`)
+
 - **Page Input**: Enter Confluence URL or page ID
 - **Live Rendering**: See your pages transformed instantly
 - **Error Handling**: Clear feedback for invalid pages or auth issues
 
 #### Showroom (`/showroom`)
+
 - **Complete Demo**: All supported ADF elements
 - **Styling Examples**: See default Tailwind styles in action
 - **Component Showcase**: Every feature of the library
 
 #### How-to Guide (`/how-to`)
+
 - **Integration Examples**: Step-by-step integration guide
 - **Code Variants**: All-in-one vs individual components
 - **Live Documentation**: Interactive version of this README
@@ -98,11 +101,9 @@ The components are styled with standard Tailwind CSS classes. Ensure your `tailw
 
 ```javascript
 module.exports = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   // ... rest of your config
-}
+};
 ```
 
 ### Configuration
@@ -114,7 +115,7 @@ Create your Confluence client configuration:
 export const confluenceConfig = {
   baseUrl: process.env.CONFLUENCE_BASE_URL!,
   email: process.env.CONFLUENCE_EMAIL!,
-  apiKey: process.env.CONFLUENCE_API_KEY!
+  apiKey: process.env.CONFLUENCE_API_KEY!,
 };
 ```
 
@@ -132,7 +133,7 @@ import { confluenceConfig } from "@/lib/confluence";
   config={confluenceConfig}
   pageId="123456"
   showNavigation={true}
-/>
+/>;
 ```
 
 #### Option 2: Individual Components (Custom Layout)
@@ -146,21 +147,21 @@ import { confluenceConfig } from "@/lib/confluence";
 
 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
   <div className="lg:col-span-1">
-    <NavigationTreeServer 
-      pageId="123456" 
-      config={confluenceConfig} 
-      title="Navigation" 
+    <NavigationTreeServer
+      pageId="123456"
+      config={confluenceConfig}
+      title="Navigation"
     />
   </div>
-  
+
   <div className="lg:col-span-2">
-    <ConfluencePage 
-      pageId="123456" 
-      config={confluenceConfig} 
-      showHeader={false} 
+    <ConfluencePage
+      pageId="123456"
+      config={confluenceConfig}
+      showHeader={false}
     />
   </div>
-</div>
+</div>;
 ```
 
 #### Optional: Page Input Form
@@ -174,13 +175,13 @@ import ConfluenceForm from "@/components/confluence/ConfluenceForm";
   initialPageId=""
   onPageIdChange={(pageId) => {
     // Handle page change in your app
-    console.log('New page ID:', pageId);
+    console.log("New page ID:", pageId);
   }}
   onError={(error) => {
     // Handle validation errors
-    console.error('Form error:', error);
+    console.error("Form error:", error);
   }}
-/>
+/>;
 ```
 
 ---
@@ -192,7 +193,7 @@ import ConfluenceForm from "@/components/confluence/ConfluenceForm";
 ```
 demo/
 ├── src/
-│   ├── app/                     # Next.js App Router
+│   ├── app/                    # Next.js App Router
 │   │   ├── page.tsx            # Home page with form
 │   │   ├── layout.tsx          # Root layout
 │   │   ├── showroom/           # Showroom demo
@@ -207,8 +208,10 @@ demo/
 │   │   │   ├── OptimizedMedia.tsx
 │   │   │   ├── AdfRenderer.tsx
 │   │   │   └── ConfluenceForm.tsx
-│   │   ├── showroom/           # Demo-specific components
-│   │   └── ConfluenceFormDemo.tsx  # Demo wrapper
+│   │   ├── demo/               # Demo-specific components
+│   │   │   ├── ConfluenceFormDemo.tsx
+│   │   │   ├── ShowroomContent.tsx
+│   │   │   └── ShowroomNavigation.tsx
 │   └── lib/
 │       └── confluence.ts       # Configuration helper
 ├── package.json
