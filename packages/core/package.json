@@ -1,6 +1,6 @@
 {
   "name": "confluence-mirror-core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Core logic for Confluence page rendering - API client, ADF processing, media handling. Unofficial, not affiliated with Atlassian.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
