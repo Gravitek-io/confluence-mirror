@@ -316,4 +316,4 @@ Found a bug or want to improve the demo?
 
 ## 📄 License
 
-MIT - Same as the main confluence-mirror packages.
+Apache-2.0

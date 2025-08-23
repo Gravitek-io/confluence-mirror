@@ -138,4 +138,4 @@ This package contains pure logic with no UI dependencies. When contributing:
 
 ## License
 
-MIT
+Apache-2.0

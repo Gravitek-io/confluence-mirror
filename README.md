@@ -27,10 +27,10 @@ Visit http://localhost:3000 to see the demo in action.
 
 ## 🎯 Integration Approaches
 
-### Option 1: Install Core Package + Copy Components
+### Option 1: Install Package + Copy Components
 
 ```bash
-# Install the core logic
+# Install the published core package
 npm install confluence-mirror-core
 
 # Copy reusable components from demo
