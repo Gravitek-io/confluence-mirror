@@ -314,7 +314,7 @@ export function renderADF(
           ),
         },
         note: {
-          classes: "bg-gray-50 border-gray-200 text-gray-800",
+          classes: "bg-purple-50 border-purple-200 text-purple-800",
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
