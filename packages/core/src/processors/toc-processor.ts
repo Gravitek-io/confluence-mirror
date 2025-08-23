@@ -1,59 +1,63 @@
-import { ADFDocument, ADFNode, TocItem } from '../types';
+import { ADFDocument, ADFNode, TocItem } from "../types";
 
 // Extract text content from ADF nodes
 function extractTextFromContent(content: ADFNode[]): string {
-  return content.map(node => {
-    if (node.type === 'text' && node.text) {
-      return node.text;
-    }
-    if (node.content) {
-      return extractTextFromContent(node.content);
-    }
-    return '';
-  }).join('');
+  return content
+    .map((node) => {
+      if (node.type === "text" && node.text) {
+        return node.text;
+      }
+      if (node.content) {
+        return extractTextFromContent(node.content);
+      }
+      return "";
+    })
+    .join("");
 }
 
 // Generate unique slug for heading
 function generateSlug(text: string, existingSlugs: Set<string>): string {
   let baseSlug = text
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
     .trim();
-  
+
   let slug = baseSlug;
   let counter = 1;
-  
+
   while (existingSlugs.has(slug)) {
     slug = `${baseSlug}-${counter}`;
     counter++;
   }
-  
+
   existingSlugs.add(slug);
   return slug;
 }
 
 // Extract headings from ADF document (server-side)
 function extractHeadings(
-  node: ADFNode | ADFDocument, 
-  headings: TocItem[], 
+  node: ADFNode | ADFDocument,
+  headings: TocItem[],
   existingSlugs: Set<string>
 ): void {
   if (!node) return;
 
-  if (node.type === 'heading' && node.content) {
+  if (node.type === "heading" && node.content) {
     const level = node.attrs?.level || 1;
     const title = extractTextFromContent(node.content);
-    
+
     if (title) {
       const id = generateSlug(title, existingSlugs);
       headings.push({ id, title, level });
-      console.log('Extracted heading for TOC:', { id, title, level });
+      // console.log('Extracted heading for TOC:', { id, title, level });
     }
   }
 
   if (node.content) {
-    node.content.forEach(child => extractHeadings(child, headings, existingSlugs));
+    node.content.forEach((child) =>
+      extractHeadings(child, headings, existingSlugs)
+    );
   }
 }
 
@@ -63,9 +67,9 @@ function enrichHeadingNodes(
   existingSlugs: Set<string>
 ): ADFNode | ADFDocument {
   if (!node) return node;
-  
+
   // Handle heading nodes
-  if (node.type === 'heading' && node.content) {
+  if (node.type === "heading" && node.content) {
     const title = extractTextFromContent(node.content);
     if (title) {
       const id = generateSlug(title, existingSlugs);
@@ -75,21 +79,21 @@ function enrichHeadingNodes(
           ...node.attrs,
           // Add generated ID for anchor links
           generatedId: id,
-        }
+        },
       };
     }
   }
-  
+
   // Recursively process content
   if (node.content) {
     return {
       ...node,
-      content: node.content.map(child => 
-        enrichHeadingNodes(child, existingSlugs) as ADFNode
-      )
+      content: node.content.map(
+        (child) => enrichHeadingNodes(child, existingSlugs) as ADFNode
+      ),
     };
   }
-  
+
   return node;
 }
 
@@ -100,18 +104,21 @@ export function processADFWithTOC(adfDocument: ADFDocument): {
 } {
   const headings: TocItem[] = [];
   const existingSlugs = new Set<string>();
-  
+
   // First pass: extract headings for TOC
   extractHeadings(adfDocument, headings, existingSlugs);
-  
+
   // Second pass: enrich heading nodes with IDs (reuse the same slugs)
   existingSlugs.clear(); // Reset for consistent ID generation
-  const enrichedDocument = enrichHeadingNodes(adfDocument, existingSlugs) as ADFDocument;
-  
-  console.log(`Extracted ${headings.length} headings for TOC`);
-  
+  const enrichedDocument = enrichHeadingNodes(
+    adfDocument,
+    existingSlugs
+  ) as ADFDocument;
+
+  // console.log(`Extracted ${headings.length} headings for TOC`);
+
   return {
     enrichedDocument,
-    tableOfContents: headings
+    tableOfContents: headings,
   };
 }

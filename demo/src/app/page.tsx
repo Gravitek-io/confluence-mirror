@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { ConfluencePage } from "confluence-mirror-next";
+import ConfluenceMirrorServer from "@/components/confluence/ConfluenceMirrorServer";
 import ConfluenceForm from "@/components/ConfluenceForm";
 import { confluenceConfig } from "@/lib/confluence";
 
@@ -13,7 +13,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Confluence Mirror
@@ -29,13 +29,19 @@ export default async function Home({ searchParams }: HomeProps) {
             >
               🎨 View Showroom
             </Link>
+            <Link
+              href="/layouts"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors"
+            >
+              🎯 Layout Examples
+            </Link>
           </div>
         </div>
 
         <ConfluenceForm initialPageId={pageId} />
 
         {(pageId || url) && (
-          <div className="mt-8 max-w-5xl mx-auto">
+          <div className="mt-8 max-w-7xl mx-auto">
             <Suspense
               fallback={
                 <div className="bg-white rounded-lg shadow-lg p-8 text-center">
@@ -46,11 +52,14 @@ export default async function Home({ searchParams }: HomeProps) {
                 </div>
               }
             >
-              <ConfluencePage
+              <ConfluenceMirrorServer
                 key={pageId || url}
+                config={confluenceConfig}
                 pageId={pageId}
                 url={url}
-                config={confluenceConfig}
+                baseUrl="http://localhost:3000"
+                showNavigation={true}
+                navigationTitle="Child Pages"
               />
             </Suspense>
           </div>

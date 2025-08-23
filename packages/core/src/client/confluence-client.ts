@@ -40,10 +40,10 @@ export interface ConfluenceChildPage {
 
 export class ConfluenceApiError extends Error {
   public statusCode?: number;
-  
+
   constructor(message: string, statusCode?: number) {
     super(message);
-    this.name = 'ConfluenceApiError';
+    this.name = "ConfluenceApiError";
     this.statusCode = statusCode;
   }
 }
@@ -54,21 +54,23 @@ export class ConfluenceClient {
   private readonly email: string;
 
   constructor(baseUrl: string, email: string, apiKey: string) {
-    this.baseUrl = baseUrl.replace(/\/$/, ''); // Remove trailing slash
+    this.baseUrl = baseUrl.replace(/\/$/, ""); // Remove trailing slash
     this.email = email;
     this.apiKey = apiKey;
   }
 
   private async makeRequest<T>(endpoint: string): Promise<T> {
     const url = `${this.baseUrl}/wiki/rest/api/${endpoint}`;
-    
+
     const response = await fetch(url, {
       headers: {
-        'Authorization': `Basic ${Buffer.from(`${this.email}:${this.apiKey}`).toString('base64')}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        Authorization: `Basic ${Buffer.from(
+          `${this.email}:${this.apiKey}`
+        ).toString("base64")}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      cache: 'no-store', // Always fetch fresh data for confluence pages
+      cache: "no-store", // Always fetch fresh data for confluence pages
     });
 
     if (!response.ok) {
@@ -82,15 +84,24 @@ export class ConfluenceClient {
     return response.json();
   }
 
-  async getPage(pageId: string, includeChildren: boolean = false): Promise<ConfluencePage> {
-    const expandParams = ['body.storage', 'body.atlas_doc_format', 'version', 'space'];
-    
+  async getPage(
+    pageId: string,
+    includeChildren: boolean = false
+  ): Promise<ConfluencePage> {
+    const expandParams = [
+      "body.storage",
+      "body.atlas_doc_format",
+      "version",
+      "space",
+      ,
+    ];
+
     if (includeChildren) {
-      expandParams.push('children.page');
+      expandParams.push("children.page");
     }
-    
+
     return this.makeRequest<ConfluencePage>(
-      `content/${pageId}?expand=${expandParams.join(',')}`
+      `content/${pageId}?expand=${expandParams.join(",")}`
     );
   }
 
@@ -98,12 +109,12 @@ export class ConfluenceClient {
     const response = await this.makeRequest<{
       results: ConfluenceChildPage[];
     }>(`content/${pageId}/child/page?expand=version,space`);
-    
+
     return response.results;
   }
 
   async getCurrentUser(): Promise<any> {
-    return this.makeRequest<any>('user/current');
+    return this.makeRequest<any>("user/current");
   }
 
   /**

@@ -11,7 +11,6 @@
     "dev": "npm run dev --workspace=demo",
     "build": "npm run build --workspaces",
     "build:core": "npm run build --workspace=packages/core",
-    "build:next": "npm run build --workspace=packages/next",
     "build:demo": "npm run build --workspace=demo",
     "lint": "npm run lint --workspaces"
   },

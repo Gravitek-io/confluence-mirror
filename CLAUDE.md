@@ -4,79 +4,114 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Confluence Mirror** application built with Next.js 15, TypeScript, and TailwindCSS. The application allows users to fetch and display Confluence page content by entering either a page ID or URL.
+**Confluence Mirror** is a TypeScript monorepo that renders Confluence content in React applications. The project provides framework-agnostic core logic and Next.js-specific React components for displaying Confluence pages with full ADF (Atlas Document Format) support.
 
 ### Key Features
 
-- Confluence API v2 integration with secure API key authentication
-- Support for both page ID and URL input formats
-- Server-side rendering of Confluence pages
-- Responsive design with TailwindCSS
-- Error handling for API failures and invalid inputs
+- Complete ADF (Atlas Document Format) rendering support
+- Confluence REST API client with TypeScript types
+- Automatic table of contents generation
+- Media processing and optimization
+- Responsive Tailwind CSS styling
+- Server-side rendering with Next.js
 
-## Architecture
+## Monorepo Architecture
 
-### Core Components
+This is a workspace-based monorepo with the following structure:
 
-- `src/lib/confluence-client.ts` - Confluence API client with TypeScript types
-- `src/lib/confluence.ts` - Configured client instance using environment variables
-- `src/components/confluence-page.tsx` - Server component for displaying page content
-- `src/components/confluence-form.tsx` - Client component for user input and validation
-- `src/app/page.tsx` - Home page with form and conditional content display
+### Packages
 
-### API Integration
+- **packages/core** (`confluence-mirror-core`): Framework-agnostic core logic
+  - Confluence API client (`ConfluenceClient`)
+  - ADF processors (media, TOC, text extraction)
+  - TypeScript types and interfaces
+- **packages/next** (`confluence-mirror-next`): Next.js React components
+  - ADF renderer components with Tailwind styling
+  - Optimized media and TOC components
+  - TOC context provider and hooks
+- **demo/**: Interactive demo application showcasing the library
 
-- Uses Confluence REST API v2 with Bearer token authentication
-- Supports both Atlas Document Format and Storage format content
-- Extracts page IDs from various Confluence URL formats
-- Base URL: `https://cmacgm.atlassian.net`
+### Key Dependencies
+
+- Core package: Pure TypeScript with no dependencies
+- Next package: React 19, Next.js 15, Tailwind CSS v4
+- Demo: Next.js app using the library packages
 
 ## Development Commands
 
 ```bash
-# Install dependencies
+# Install all dependencies (root + workspaces)
 npm install
 
-# Start development server
-npm run dev
+# Development
+npm run dev                 # Start demo app in development
+npm run build              # Build all packages and demo
+npm run build:core         # Build core package only
+npm run build:next         # Build next package only
+npm run build:demo         # Build demo app only
+npm run lint               # Lint all workspaces
 
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Lint code
-npm run lint
+# Package-specific commands
+cd packages/core && npm run dev    # Watch build core package
+cd packages/next && npm run dev    # Watch build next package
+cd demo && npm run dev             # Start demo in development
 ```
 
-## Environment Configuration
+## Core Architecture
 
-Required environment variables in `.env.local`:
+### Confluence API Integration
 
-```
-CONFLUENCE_API_KEY=your_confluence_api_key
-CONFLUENCE_BASE_URL=https://cmacgm.atlassian.net
-```
+- **Authentication**: Basic auth using email + API key
+- **API Version**: Confluence REST API v1 (standard endpoints)
+- **Supported Formats**: ADF (Atlas Document Format) and Storage format
+- **URL Extraction**: Supports multiple Confluence URL patterns
 
-## URL Format Support
+### ADF Processing Pipeline
 
-The application supports multiple Confluence URL formats:
+1. **Raw ADF**: Fetched from Confluence API
+2. **Media Processing**: Extract and process media references (`processADFWithMedia`)
+3. **TOC Processing**: Generate table of contents from headings (`processADFWithTOC`)
+4. **Rendering**: Convert ADF nodes to React components (`renderADF`)
 
-- Page ID: `3788636279`
-- Modern URL: `https://cmacgm.atlassian.net/wiki/spaces/CA/pages/3788636279/Page+Title`
-- Legacy URL: `https://cmacgm.atlassian.net/wiki/pages/viewpage.action?pageId=3788636279`
+### Component Architecture
 
-## Testing
+- **AdfRenderer**: Core rendering engine that converts ADF nodes to React
+- **OptimizedADFRenderer**: Wrapper with media and TOC preprocessing
+- **TocProvider/TocContext**: React context for table of contents state
+- **OptimizedMedia**: Component for handling Confluence media assets
+- **ConfluencePage**: High-level server component for complete page rendering
 
-Example page for testing:
+## Supported ADF Elements
 
-- URL: `https://cmacgm.atlassian.net/wiki/spaces/CA/pages/3788636279`
-- Page ID: `3788636279`
+The renderer supports comprehensive ADF elements including:
 
-## Security Notes
+- **Text**: Bold, italic, code, strikethrough, underline, links
+- **Structure**: Headings, paragraphs, lists (bullet/ordered), blockquotes
+- **Layout**: Multi-column layouts with responsive behavior
+- **Content**: Tables, panels (info/warning/error/success/note), code blocks
+- **Interactive**: Task lists with checkboxes, status badges
+- **Rich**: Media (images/attachments), inline cards, mentions, dates, emojis
+- **Extensions**: Confluence macros and bodied extensions
 
-- API credentials are stored in `.env.local` (gitignored)
-- Bearer token authentication is used for all Confluence API calls
-- Client-side validation prevents malformed requests
-- Server-side error handling for API failures
+## Working with the Codebase
+
+### Adding New ADF Support
+
+1. Add type definitions in `packages/core/src/types/index.ts`
+2. Implement rendering logic in `packages/next/src/components/AdfRenderer.tsx`
+3. Add processing logic if needed in `packages/core/src/processors/`
+
+### Package Development Workflow
+
+1. Make changes to core package first (types, API logic)
+2. Build core package: `npm run build:core`
+3. Make changes to next package (components, rendering)
+4. Test in demo app: `npm run dev` from root
+
+### File Organization
+
+- **Types**: All TypeScript interfaces in `packages/core/src/types/`
+- **API Logic**: Confluence client in `packages/core/src/client/`
+- **Processors**: Pure functions for ADF transformation in `packages/core/src/processors/`
+- **Components**: React components in `packages/next/src/components/`
+- **Exports**: Main package exports in `packages/*/src/index.ts`

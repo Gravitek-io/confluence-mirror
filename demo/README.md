@@ -1,6 +1,6 @@
-# Confluence Mirror Demo
+# Confluence Mirror
 
-Interactive demo application showcasing the `confluence-mirror-next` library.
+Transform your Confluence pages into beautiful React components! This project demonstrates how to seamlessly integrate Confluence content into modern web applications, bringing your documentation to life with native React rendering and Tailwind CSS styling.
 
 ## 🚀 Quick Start
 
@@ -28,7 +28,7 @@ Create a `.env.local` file in the demo directory:
 # Your Confluence instance
 CONFLUENCE_BASE_URL=https://your-domain.atlassian.net
 
-# Your Atlassian account email  
+# Your Atlassian account email
 CONFLUENCE_EMAIL=your.email@domain.com
 
 # Confluence API token (generate from Atlassian Account Settings)
@@ -38,6 +38,7 @@ CONFLUENCE_API_KEY=your_api_token_here
 ### Confluence API Setup
 
 1. **Generate API Token**:
+
    - Go to [Atlassian Account Settings](https://id.atlassian.com/manage-profile/security/api-tokens)
    - Click "Create API token"
    - Name it "Confluence Mirror Demo"
@@ -51,38 +52,41 @@ CONFLUENCE_API_KEY=your_api_token_here
 ## 📖 Demo Pages
 
 ### Home Page (`/`)
+
 - **Page Input**: Enter Confluence URL or page ID
 - **Live Rendering**: See your pages transformed instantly
 - **Error Handling**: Clear feedback for invalid pages or auth issues
 
 ### Showroom (`/showroom`)
+
 - **Complete Demo**: All supported ADF elements
 - **Styling Examples**: See default Tailwind styles in action
 - **Component Showcase**: Every feature of confluence-mirror-next
 
-## 🎯 Usage Examples
+## 🎯 Implementation Examples
 
-The demo shows how to use `confluence-mirror-next` in your own apps:
+This project demonstrates how to build Confluence integration components:
 
 ```tsx
-// Basic usage (see src/app/page.tsx)
-import { ConfluencePage } from 'confluence-mirror-next';
+// All-in-one server component (see src/components/confluence/)
+import ConfluenceMirrorServer from "@/components/confluence/ConfluenceMirrorServer";
 
-<ConfluencePage 
-  pageId={pageId} 
-  config={{
-    baseUrl: process.env.CONFLUENCE_BASE_URL!,
-    email: process.env.CONFLUENCE_EMAIL!,
-    apiKey: process.env.CONFLUENCE_API_KEY!
-  }} 
+<ConfluenceMirrorServer
+  config={confluenceConfig}
+  pageId={pageId}
+  showNavigation={true}
 />
 ```
 
 ```tsx
-// With loading states (see src/app/page.tsx)
-<Suspense fallback={<LoadingSpinner />}>
+// Individual components for custom layouts
+import ConfluencePage from "@/components/confluence/ConfluencePage";
+import NavigationTreeServer from "@/components/confluence/NavigationTreeServer";
+
+<div className="grid grid-cols-4 gap-8">
+  <NavigationTreeServer pageId={pageId} config={config} />
   <ConfluencePage pageId={pageId} config={config} />
-</Suspense>
+</div>
 ```
 
 ## 🛠️ Development
@@ -123,6 +127,7 @@ npm run lint
 ### Deployment Options
 
 **Vercel (Recommended)**:
+
 ```bash
 # Deploy to Vercel
 vercel --prod
@@ -132,6 +137,7 @@ vercel --prod
 ```
 
 **Docker**:
+
 ```dockerfile
 # Example Dockerfile
 FROM node:18-alpine
@@ -149,21 +155,25 @@ CMD ["npm", "start"]
 ### Common Issues
 
 **"Page not found" errors**:
+
 - Verify the Confluence page exists and is accessible
 - Check that your API token has read permissions
 - Try with a page ID instead of URL
 
 **Authentication failures**:
+
 - Ensure `CONFLUENCE_EMAIL` matches your Atlassian account
 - Regenerate your API token if it's expired
 - Test the base URL in your browser
 
 **Styling issues**:
+
 - The demo includes Tailwind CSS setup
 - Check `tailwind.config.js` for proper content paths
 - Verify Next.js configuration is correct
 
 **Performance issues**:
+
 - Confluence pages with many images may load slowly
 - Consider implementing pagination for large pages
 - Use the `Suspense` boundary for better UX
@@ -182,9 +192,10 @@ DEBUG=confluence-mirror:* npm run dev
 The demo shows how to customize confluence-mirror-next:
 
 ### Custom Styling
+
 ```tsx
 // Override default styles
-<ConfluencePage 
+<ConfluencePage
   pageId={pageId}
   config={config}
   className="bg-gray-50 p-8 rounded-lg shadow-xl"
@@ -192,9 +203,10 @@ The demo shows how to customize confluence-mirror-next:
 ```
 
 ### Custom Components
+
 ```tsx
 // Use individual components
-import { OptimizedADFRenderer, OptimizedTOC } from 'confluence-mirror-next';
+import { OptimizedADFRenderer, OptimizedTOC } from "@/components/confluence";
 
 <div className="grid grid-cols-4 gap-6">
   <aside className="col-span-1">
@@ -203,7 +215,7 @@ import { OptimizedADFRenderer, OptimizedTOC } from 'confluence-mirror-next';
   <main className="col-span-3">
     <OptimizedADFRenderer document={document} pageId={pageId} />
   </main>
-</div>
+</div>;
 ```
 
 ## 📚 Learn More
