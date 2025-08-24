@@ -12,6 +12,11 @@ export interface ConfluencePage {
   };
   version: {
     number: number;
+    when?: string;
+    by?: {
+      displayName: string;
+      email?: string;
+    };
   };
   space: {
     key: string;
@@ -93,7 +98,7 @@ export class ConfluenceClient {
       "body.atlas_doc_format",
       "version",
       "space",
-      ,
+      "history.lastUpdated",
     ];
 
     if (includeChildren) {

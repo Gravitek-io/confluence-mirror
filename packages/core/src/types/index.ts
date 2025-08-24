@@ -30,6 +30,11 @@ export interface ConfluencePage {
   };
   version: {
     number: number;
+    when?: string;
+    by?: {
+      displayName: string;
+      email?: string;
+    };
   };
   space: {
     key: string;

@@ -107,8 +107,17 @@ export default async function ConfluencePage({
               <h1 className="text-2xl font-bold text-gray-900 mb-2">{page.title}</h1>
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 <span>ID: {page.id}</span>
-                <span>Version: {page.version.number}</span>
                 <span>Space: {page.space.name} ({page.space.key})</span>
+                <span>Version: {page.version.number}</span>
+                {page.version.when && (
+                  <span>Updated: {new Date(page.version.when).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}</span>
+                )}
               </div>
             </div>
             <a 
