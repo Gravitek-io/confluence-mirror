@@ -42,10 +42,11 @@ export default function OptimizedMedia({
           <Image
             src={showroomImageUrl}
             alt={alt}
-            className="rounded-lg shadow-sm hover:shadow-lg transition-shadow"
+            className="rounded-lg shadow-sm hover:shadow-lg transition-shadow max-w-full h-auto"
             unoptimized={true}
             width={1000}
             height={800}
+            style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
           />
         </div>
       </div>
@@ -96,10 +97,11 @@ export default function OptimizedMedia({
         <Image
           src={url}
           alt={alt}
-          className="rounded-lg shadow-sm hover:shadow-lg transition-shadow"
+          className="rounded-lg shadow-sm hover:shadow-lg transition-shadow max-w-full h-auto"
           unoptimized={true}
           width={1000}
           height={800}
+          style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
         />
       </div>
     </div>

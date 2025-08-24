@@ -242,8 +242,7 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
-              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
+              className="w-6 h-6 shrink-0"
             >
               <path
                 strokeLinecap="round"
@@ -262,8 +261,7 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
-              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
+              className="w-6 h-6 shrink-0"
             >
               <path
                 strokeLinecap="round"
@@ -282,8 +280,7 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
-              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
+              className="w-6 h-6 shrink-0"
             >
               <path
                 strokeLinecap="round"
@@ -302,8 +299,7 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
-              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
+              className="w-6 h-6 shrink-0"
             >
               <path
                 strokeLinecap="round"
@@ -322,8 +318,7 @@ export function renderADF(
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
-              style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', maxWidth: '24px', maxHeight: '24px' }}
+              className="w-6 h-6 shrink-0"
             >
               <path
                 strokeLinecap="round"
@@ -618,8 +613,8 @@ export function renderADF(
       const sectionIsOverflowing = sectionTotalWidth > 100;
       
       return (
-        <div key={key} className="w-full my-6">
-          <div className={`flex flex-col md:flex-row gap-4 ${sectionIsOverflowing ? 'overflow-x-auto' : ''}`}>
+        <div key={key} className="w-full my-6 overflow-hidden">
+          <div className={`flex flex-col md:flex-row gap-4 ${sectionIsOverflowing ? 'overflow-x-auto' : ''} min-w-0`}>
             {node.content?.map((child, index) =>
               renderADF(child, index, { ...options, totalColumnWidth: sectionTotalWidth })
             )}
@@ -628,63 +623,35 @@ export function renderADF(
       );
 
     case "layoutColumn":
-      const columnWidth = node.attrs?.width || 50; // Default to 50% if no width specified
+      const columnWidth = node.attrs?.width || 50;
       const totalWidth = options?.totalColumnWidth || 100;
       const isOverflowing = totalWidth > 100;
       
       // If overflowing, normalize the width proportionally
       const normalizedWidth = isOverflowing ? (columnWidth / totalWidth) * 100 : columnWidth;
       
-      // Use flex with proper responsive behavior and overflow control
-      const flexClass = "flex-shrink-0"; // Always use shrink-0 for consistent sizing
-      let widthStyle = {}; // For precise width control
-      
-      // Calculate responsive widths based on normalized percentages
+      // Use Tailwind classes based on normalized width with proper flex behavior
+      let columnClass = "flex-1"; // Allow columns to shrink and grow as needed
       if (normalizedWidth <= 25) {
-        widthStyle = { 
-          width: `${normalizedWidth}%`, 
-          minWidth: "200px",
-          maxWidth: `${normalizedWidth}%`
-        };
+        columnClass = "basis-1/4 flex-shrink min-w-0";
       } else if (normalizedWidth <= 33) {
-        widthStyle = { 
-          width: `${normalizedWidth}%`, 
-          minWidth: "250px",
-          maxWidth: `${normalizedWidth}%`
-        };
+        columnClass = "basis-1/3 flex-shrink min-w-0";
       } else if (normalizedWidth <= 50) {
-        widthStyle = { 
-          width: `${normalizedWidth}%`, 
-          minWidth: "300px",
-          maxWidth: `${normalizedWidth}%`
-        };
+        columnClass = "basis-1/2 flex-shrink min-w-0";
       } else if (normalizedWidth <= 66) {
-        widthStyle = { 
-          width: `${normalizedWidth}%`, 
-          minWidth: "350px",
-          maxWidth: `${normalizedWidth}%`
-        };
+        columnClass = "basis-2/3 flex-shrink min-w-0";
       } else if (normalizedWidth <= 75) {
-        widthStyle = { 
-          width: `${normalizedWidth}%`, 
-          minWidth: "400px",
-          maxWidth: `${normalizedWidth}%`
-        };
+        columnClass = "basis-3/4 flex-shrink min-w-0";
       } else {
-        widthStyle = { 
-          width: `${normalizedWidth}%`, 
-          minWidth: "450px",
-          maxWidth: `${normalizedWidth}%`
-        };
+        columnClass = "basis-full flex-shrink min-w-0";
       }
 
       return (
         <div 
           key={key} 
-          className={`${flexClass} min-w-0 overflow-hidden`}
-          style={widthStyle}
+          className={`${columnClass} min-w-0 overflow-hidden`}
         >
-          <div className="pr-4 last:pr-0 overflow-hidden">
+          <div className="pr-4 last:pr-0 overflow-hidden min-w-0 w-full">
             {node.content?.map((child, index) =>
               renderADF(child, index, options)
             )}

@@ -9,10 +9,10 @@ interface ConfluenceFormProps {
   onError?: (error: string) => void;
 }
 
-export default function ConfluenceForm({ 
-  initialPageId, 
-  onPageIdChange, 
-  onError 
+export default function ConfluenceForm({
+  initialPageId,
+  onPageIdChange,
+  onError,
 }: ConfluenceFormProps) {
   const [input, setInput] = useState(initialPageId || "");
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +44,8 @@ export default function ConfluenceForm({
 
       onPageIdChange(pageId);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Validation error";
+      const errorMessage =
+        err instanceof Error ? err.message : "Validation error";
       setError(errorMessage);
       onError?.(errorMessage);
     } finally {
@@ -59,9 +60,13 @@ export default function ConfluenceForm({
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <form onSubmit={handleSubmit} className="space-y-4" suppressHydrationWarning={true}>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+          suppressHydrationWarning={true}
+        >
           <div>
             <label
               htmlFor="pageInput"
